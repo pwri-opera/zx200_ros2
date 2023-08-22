@@ -1,0 +1,14 @@
+material ic120texture
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture ic120.png
+				scale 1 1
+			}
+		}
+	}
+}
