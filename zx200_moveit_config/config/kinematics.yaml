@@ -4,6 +4,6 @@ manipulator:
   kinematics_solver_timeout: 0.005
 
 # manipulator:
-#   kinematics_solver: zx120_manipulator_ikfast_plugin/IKFastKinematicsPlugin
+#   kinematics_solver: zx200_manipulator_ikfast_plugin/IKFastKinematicsPlugin
 #   kinematics_solver_search_resolution: 0.005
 #   kinematics_solver_timeout: 0.005
