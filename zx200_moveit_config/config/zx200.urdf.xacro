@@ -9,6 +9,6 @@
     <xacro:include filename="zx200.ros2_control.xacro" />
 
 
-    <xacro:zx200_ros2_control name="FakeSystem" initial_positions_file="$(arg initial_positions_file)"/>
-
+    <!-- <xacro:zx200_ros2_control name="FakeSystem" initial_positions_file="$(arg initial_positions_file)"/> -->
+    <xacro:zx200_ros2_control name="FakeSystem" plugin="mock_components/GenericSystem" initial_positions_file="$(arg initial_positions_file)"/>
 </robot>
