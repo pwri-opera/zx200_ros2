@@ -1,0 +1,8 @@
+# Default initial positions for zx200's ros2_control fake system
+
+initial_positions:
+  arm_joint: 1.803
+  boom_joint: 0
+  bucket_end_joint: 0
+  bucket_joint: 1.0172
+  swing_joint: 0

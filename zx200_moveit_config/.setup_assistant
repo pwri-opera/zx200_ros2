@@ -1,0 +1,31 @@
+moveit_setup_assistant_config:
+  urdf:
+    package: zx200_description
+    relative_path: urdf/zx200.xacro
+  srdf:
+    relative_path: config/zx200.srdf
+  package_settings:
+    author_name: ""
+    author_email: ""
+    generated_timestamp: 1692748134
+  control_xacro:
+    command:
+      - position
+      - velocity
+      - effort
+    state:
+      - position
+      - velocity
+      - effort
+  modified_urdf:
+    xacros:
+      - control_xacro
+  control_xacro:
+    command:
+      - position
+      - velocity
+      - effort
+    state:
+      - position
+      - velocity
+      - effort

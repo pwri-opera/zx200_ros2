@@ -9,7 +9,7 @@
 	<!-- Used for fixing robot to Gazebo 'base_link' -->
 	<link name="base_link"/>
 
-	<joint name="fixed" type="fixed">
+	<joint name="base_joint" type="fixed">
 		<parent link="base_link"/>
 		<child link="track_link"/>
 	</joint>
@@ -167,6 +167,31 @@
 											izz="1.0"/>
 		</inertial>
 	</link>
+
+	<link name="bucket_end_link">
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<geometry>
+				<box size="0.001 0.001 0.001" />
+			</geometry>
+			<!-- <material name="red"/> -->
+		</visual>
+		<inertial>
+			<origin xyz="0 0 0" />
+			<mass value="1.0e-03" />
+			<inertia ixx="1.0e-03" ixy="0.0" ixz="0.0"
+					iyy="1.0e-03" iyz="0.0"
+					izz="1.0e-03" />
+		</inertial>
+  	</link>
+
+  <joint name="bucket_end_joint" type="revolute">
+    <parent link="bucket_link"/>
+    <child link="bucket_end_link"/>
+    <axis xyz="1 0 0"/>
+    <origin rpy="0 ${radians(50)} 0" xyz="0 0 1.23"/>
+    <limit effort="1" lower="-3.14" upper="3.14" velocity="0.5"/>
+  </joint>
 
 	<transmission name="tran1">
 		<type>transmission_interface/SimpleTransmission</type>
