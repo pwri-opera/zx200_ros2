@@ -1,62 +1,63 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
-    <xacro:macro name="zx200_ros2_control" params="name initial_positions_file">
+    <xacro:macro name="zx200_ros2_control" params="name plugin initial_positions_file">
         <xacro:property name="initial_positions" value="${load_yaml(initial_positions_file)['initial_positions']}"/>
 
         <ros2_control name="${name}" type="system">
             <hardware>
                 <!-- By default, set up controllers for simulation. This won't work on real hardware -->
-                <plugin>mock_components/GenericSystem</plugin>
+                <!-- <plugin>mock_components/GenericSystem</plugin> -->
+                <plugin>${plugin}</plugin>
             </hardware>
             <joint name="swing_joint">
                 <command_interface name="position"/>
-                <command_interface name="velocity"/>
-                <command_interface name="effort"/>
+                <!-- <command_interface name="velocity"/>
+                <command_interface name="effort"/> -->
                 <state_interface name="position">
                   <param name="initial_value">${initial_positions['swing_joint']}</param>
                 </state_interface>
-                <state_interface name="velocity"/>
-                <state_interface name="effort"/>
+                <!-- <state_interface name="velocity"/>
+                <state_interface name="effort"/> -->
             </joint>
             <joint name="boom_joint">
                 <command_interface name="position"/>
-                <command_interface name="velocity"/>
-                <command_interface name="effort"/>
+                <!-- <command_interface name="velocity"/>
+                <command_interface name="effort"/> -->
                 <state_interface name="position">
                   <param name="initial_value">${initial_positions['boom_joint']}</param>
                 </state_interface>
-                <state_interface name="velocity"/>
-                <state_interface name="effort"/>
+                <!-- <state_interface name="velocity"/>
+                <state_interface name="effort"/> -->
             </joint>
             <joint name="arm_joint">
                 <command_interface name="position"/>
-                <command_interface name="velocity"/>
-                <command_interface name="effort"/>
+                <!-- <command_interface name="velocity"/>
+                <command_interface name="effort"/> -->
                 <state_interface name="position">
                   <param name="initial_value">${initial_positions['arm_joint']}</param>
                 </state_interface>
-                <state_interface name="velocity"/>
-                <state_interface name="effort"/>
+                <!-- <state_interface name="velocity"/>
+                <state_interface name="effort"/> -->
             </joint>
             <joint name="bucket_joint">
                 <command_interface name="position"/>
-                <command_interface name="velocity"/>
-                <command_interface name="effort"/>
+                <!-- <command_interface name="velocity"/>
+                <command_interface name="effort"/> -->
                 <state_interface name="position">
                   <param name="initial_value">${initial_positions['bucket_joint']}</param>
                 </state_interface>
-                <state_interface name="velocity"/>
-                <state_interface name="effort"/>
+                <!-- <state_interface name="velocity"/>
+                <state_interface name="effort"/> -->
             </joint>
             <joint name="bucket_end_joint">
                 <command_interface name="position"/>
-                <command_interface name="velocity"/>
-                <command_interface name="effort"/>
+                <!-- <command_interface name="velocity"/>
+                <command_interface name="effort"/> -->
                 <state_interface name="position">
                   <param name="initial_value">${initial_positions['bucket_end_joint']}</param>
                 </state_interface>
-                <state_interface name="velocity"/>
-                <state_interface name="effort"/>
+                <!-- <state_interface name="velocity"/>
+                <state_interface name="effort"/> -->
             </joint>
 
         </ros2_control>

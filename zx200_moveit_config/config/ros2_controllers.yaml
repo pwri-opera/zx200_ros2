@@ -3,14 +3,34 @@ controller_manager:
   ros__parameters:
     update_rate: 100  # Hz
 
-    manipulator_controller:
-      type: joint_trajectory_controller/JointTrajectoryController
+    # manipulator_controller: # default controller
+    #   type: joint_trajectory_controller/JointTrajectoryController
 
+    upper_arm_controller: # original controller
+      type: joint_trajectory_controller/JointTrajectoryController
 
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
 
-manipulator_controller:
+# manipulator_controller:
+#   ros__parameters:
+#     joints:
+#       - swing_joint
+#       - boom_joint
+#       - arm_joint
+#       - bucket_joint
+#       - bucket_end_joint
+#     command_interfaces:
+#       - position
+#       - velocity
+#       - effort
+#     state_interfaces:
+#       - position
+#       - velocity
+#       - effort
+
+
+upper_arm_controller:
   ros__parameters:
     joints:
       - swing_joint
@@ -20,9 +40,5 @@ manipulator_controller:
       - bucket_end_joint
     command_interfaces:
       - position
-      - velocity
-      - effort
     state_interfaces:
       - position
-      - velocity
-      - effort
