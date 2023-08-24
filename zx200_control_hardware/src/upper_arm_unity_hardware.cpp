@@ -6,6 +6,9 @@
 
 // 
 #include "std_msgs/msg/string.hpp"
+#include "com3_msgs/msg/joint_cmd.hpp"
+
+
 using std::placeholders::_1;
 // 
 namespace zx200_control_hardware
@@ -22,30 +25,32 @@ namespace zx200_control_hardware
 
     node_ = rclcpp::Node::make_shared("uac_fake_hw");
     joint_state_pub_ = node_->create_publisher<sensor_msgs::msg::JointState>("/test/joint_states", 100);
-    swing_cmd_pub_ = node_->create_publisher<std_msgs::msg::Float64>("/zx200/swing/cmd", 100);
-    boom_cmd_pub_ = node_->create_publisher<std_msgs::msg::Float64>("/zx200/boom/cmd", 100);
-    arm_cmd_pub_ = node_->create_publisher<std_msgs::msg::Float64>("/zx200/arm/cmd", 100);
-    bucket_cmd_pub_ = node_->create_publisher<std_msgs::msg::Float64>("/zx200/bucket/cmd", 100);
+    // swing_cmd_pub_ = node_->create_publisher<std_msgs::msg::Float64>("/zx200/swing/cmd", 100);
+    // boom_cmd_pub_ = node_->create_publisher<std_msgs::msg::Float64>("/zx200/boom/cmd", 100);
+    // arm_cmd_pub_ = node_->create_publisher<std_msgs::msg::Float64>("/zx200/arm/cmd", 100);
+    // bucket_cmd_pub_ = node_->create_publisher<std_msgs::msg::Float64>("/zx200/bucket/cmd", 100);
+    joint_cmd_pub_ = node_->create_publisher<com3_msgs::msg::JointCmd>("/zx200/joint_cmd", 100);
 
     node_thread_ = std::thread([this]()
                                { rclcpp::spin(node_); });
-    joint_state_msg_.header.frame_id = "joint-state data";
-    joint_state_msg_.name.resize(info_.joints.size());
-    joint_state_msg_.position.resize(info_.joints.size(), 0);
-    joint_state_msg_.velocity.resize(info_.joints.size(), 0);
-    joint_state_msg_.effort.resize(info_.joints.size(), 0);
+    joint_state_msg.header.frame_id = "joint-state data";
+    joint_state_msg.name.resize(info_.joints.size());
+    joint_state_msg.position.resize(info_.joints.size(), 0);
+    joint_state_msg.velocity.resize(info_.joints.size(), 0);
+    joint_state_msg.effort.resize(info_.joints.size(), 0);
     for (int i = 0; i < (int)info_.joints.size(); i++)
     {
-      joint_state_msg_.name[i] = info_.joints[i].name;
+      joint_state_msg.name[i] = info_.joints[i].name;
     }
-    //
-    // for (int i = 0; i < info_.joints.size();i++){
 
-    // }
-    // double init_pos;
-    // hardware_interface
-    // node_->get_parameter("/move_group/robot_description");
-    // position_cmds_.resize(info_.joints.size(), 0);
+    joint_cmd_msg.joint_name.resize(info_.joints.size());
+    joint_cmd_msg.position.resize(info_.joints.size(), 0);
+    joint_cmd_msg.velocity.resize(info_.joints.size(), 0);
+    joint_cmd_msg.effort.resize(info_.joints.size(), 0);
+    for (int i = 0; i < (int)info_.joints.size(); i++)
+    {
+      joint_cmd_msg.joint_name[i] = info_.joints[i].name;
+    }
 
     hw_states_.resize(info_.joints.size(), 0);
     hw_commands_.resize(info_.joints.size(), 0);
@@ -161,16 +166,21 @@ namespace zx200_control_hardware
   hardware_interface::return_type Zx200UpperArmPositionUnityHardware::read(
       const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
   {
-    joint_state_msg_.header.stamp = node_->get_clock()->now();
-    joint_state_pub_->publish(joint_state_msg_);
-    angle_cmd_.data = hw_commands_[0];
-    swing_cmd_pub_->publish(angle_cmd_);
-    angle_cmd_.data = hw_commands_[1];
-    boom_cmd_pub_->publish(angle_cmd_);
-    angle_cmd_.data = hw_commands_[2];
-    arm_cmd_pub_->publish(angle_cmd_);
-    angle_cmd_.data = hw_commands_[3];
-    bucket_cmd_pub_->publish(angle_cmd_);
+    joint_state_msg.header.stamp = node_->get_clock()->now();
+    joint_state_pub_->publish(joint_state_msg);
+    // angle_cmd_.data = hw_commands_[0];
+    // swing_cmd_pub_->publish(angle_cmd_);
+    // angle_cmd_.data = hw_commands_[1];
+    // boom_cmd_pub_->publish(angle_cmd_);
+    // angle_cmd_.data = hw_commands_[2];
+    // arm_cmd_pub_->publish(angle_cmd_);
+    // angle_cmd_.data = hw_commands_[3];
+    // bucket_cmd_pub_->publish(angle_cmd_);
+    for (int i = 0; i < (int)info_.joints.size(); i++)
+    {
+      joint_cmd_msg.position[i] = hw_commands_[i];
+    }
+    joint_cmd_pub_->publish(joint_cmd_msg);
 
     return hardware_interface::return_type::OK;
   }
@@ -181,15 +191,8 @@ namespace zx200_control_hardware
     for (int i = 0; i < (int)hw_commands_.size(); i++)
     {
       hw_states_[i] = hw_commands_[i];
-      joint_state_msg_.position[i] = hw_commands_[i];
-      // RCLCPP_INFO(rclcpp::get_logger("ros_control"), "hw_commands_[%d]:%f", i, hw_commands_[i]);
-      // RCLCPP_INFO(rclcpp::get_logger("ros_control"), "hw_states_[%d]:%f", i, hw_states_[i]);
+      joint_state_msg.position[i] = hw_commands_[i];
     }
-    // for (int i = 0; i < velocity_cmds_.size(); i++)
-    // {
-    //   velocity_states_[i] = velocity_cmds_[i];
-    //   joint_state_msg_.velocity[i] = velocity_cmds_[i];
-    // }
 
     return hardware_interface::return_type::OK;
   }

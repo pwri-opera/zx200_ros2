@@ -14,6 +14,7 @@
   <depend>rclcpp</depend>
   <depend>std_msgs</depend>
   <depend>sensor_msgs</depend>
+  <depend>com3_msgs</depend>
   <depend>joint_state_broadcaster</depend>
   <depend>joint_trajectory_controller</depend>
 
