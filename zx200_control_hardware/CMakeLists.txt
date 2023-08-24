@@ -12,6 +12,7 @@ find_package(pluginlib REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(com3_msgs REQUIRED)
 
 # add_executable(upper_arm_control src/upper_arm_control.cpp)
 # target_include_directories(upper_arm_control PUBLIC
@@ -43,6 +44,7 @@ ament_target_dependencies(
   rclcpp
   std_msgs
   sensor_msgs
+  com3_msgs
   # rclcpp_lifecycle
 )
 
