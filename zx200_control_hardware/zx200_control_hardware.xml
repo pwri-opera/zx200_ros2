@@ -16,4 +16,12 @@
     </description>
   </class>
 
+  <class name="zx200_control_hardware/Zx200UpperArmFakeHardware"
+         type="zx200_control_hardware::Zx200UpperArmFakeHardware"
+         base_class_type="hardware_interface::SystemInterface">
+    <description>
+      The ROS2 Control for zx200.
+    </description>
+  </class>
+
 </library>
