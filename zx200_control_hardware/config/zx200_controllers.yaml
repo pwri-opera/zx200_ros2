@@ -20,6 +20,8 @@ upper_arm_controller:
       - bucket_end_joint
     command_interfaces:
       - position
+      - velocity
+      # - effort
     state_interfaces:
       - position
-      # - velocity
+      - velocity

@@ -16,12 +16,12 @@
 #include "zx200_control_hardware/visibility_control.h"
 #include "com3_msgs/msg/joint_cmd.hpp"
 
-namespace ZX200_control_hardware
+namespace zx200_control_hardware
 {
-    class ZX200UpperArmPositionHardware : public hardware_interface::SystemInterface
+    class Zx200UpperArmPositionHardware : public hardware_interface::SystemInterface
     {
         public:
-            RCLCPP_SHARED_PTR_DEFINITIONS(ZX200UpperArmPositionHardware)
+            RCLCPP_SHARED_PTR_DEFINITIONS(Zx200UpperArmPositionHardware)
 
             ZX200_CONTROL_HARDWARE_PUBLIC
             hardware_interface::CallbackReturn on_init(
@@ -54,35 +54,21 @@ namespace ZX200_control_hardware
                 const rclcpp::Time &time, const rclcpp::Duration &period) override;
 
         private:
-            //   void ac58_js_callback(const sensor_msgs::msg::JointState &msg);
-            // std::vector<double> hw_commands_;
-            // std::vector<double> hw_states_;
+            void imu_js_callback(const sensor_msgs::msg::JointState &msg);
+            
             std::vector<double> position_commands_; // for unity
             std::vector<double> velocity_commands_;
-            std::vector<double> effort_commands_;
+            // std::vector<double> effort_commands_;
             std::vector<double> position_states_;
+            std::vector<double> velocity_states_;
+            // std::vector<double> old_position_states_; // TODO: Delete after using velocity feedback via can
 
             std::vector<double> predicted_positions_; // predicted position
-            // std::vector<double> velocity_states_;
-            // std::vector<double> effort_states_;
-            // std::vector<double> ac58_joint_states_;           
             std::vector<double> imu_joint_values_;
 
             std::shared_ptr<rclcpp::Node> node_;
             std::thread node_thread_;
-            // rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr joint_state_pub_;
-            // rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr swing_setpoint_pub_;
-            // rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr boom_setpoint_pub_;
-            // rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr arm_setpoint_pub_;
-            // rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr bucket_setpoint_pub_;
-
-            // rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr swing_state_pub_;
-            // rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr boom_state_pub_;
-            // rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr arm_state_pub_;
-            // rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr bucket_state_pub_;
-            // sensor_msgs::msg::JointState joint_state_msg_;
-            // std_msgs::msg::Float64 angle_cmd_;
-            // rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr ac58_js_sub_;
+            rclcpp::Publisher<com3_msgs::msg::JointCmd>::SharedPtr joint_cmd_pub_;
             rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr imu_js_sub_;
             com3_msgs::msg::JointCmd joint_cmd_msg_;
     };
