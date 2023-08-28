@@ -110,7 +110,7 @@ namespace zx200_control_hardware
       state_interfaces.emplace_back(hardware_interface::StateInterface(
           info_.joints[i].name, hardware_interface::HW_IF_POSITION, &position_states_[i]));
       state_interfaces.emplace_back(hardware_interface::StateInterface(
-          info_.joints[i].name, hardware_interface::HW_IF_VELOCITY, &position_states_[i]));
+          info_.joints[i].name, hardware_interface::HW_IF_VELOCITY, &velocity_states_[i]));
     }
 
     return state_interfaces;
