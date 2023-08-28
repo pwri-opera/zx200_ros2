@@ -23,7 +23,7 @@ namespace zx200_control_hardware
       return hardware_interface::CallbackReturn::ERROR;
     }
 
-    node_ = rclcpp::Node::make_shared("uac_fake_hw");
+    node_ = rclcpp::Node::make_shared("uac_unity_hw");
     joint_state_pub_ = node_->create_publisher<sensor_msgs::msg::JointState>("/test/joint_states", 100);
     // swing_cmd_pub_ = node_->create_publisher<std_msgs::msg::Float64>("/zx200/swing/cmd", 100);
     // boom_cmd_pub_ = node_->create_publisher<std_msgs::msg::Float64>("/zx200/boom/cmd", 100);
