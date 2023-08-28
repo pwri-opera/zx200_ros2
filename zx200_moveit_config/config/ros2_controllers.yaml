@@ -39,9 +39,16 @@ upper_arm_controller:
       - bucket_joint
       - bucket_end_joint
     command_interfaces:
-      - position
-      - velocity
-      # - effort
+      # - position
+      # - velocity
+      - effort
     state_interfaces:
       - position
       - velocity
+    gains:
+      swing_joint: {p: 1.0, i: 0.0, d: 0.0}
+      boom_joint: {p: 1.0, i: 0.0, d: 0.0}
+      arm_joint: {p: 1.0, i: 0.0, d: 0.0}
+      bucket_joint: {p: 1.0, i: 0.0, d: 0.0}
+
+

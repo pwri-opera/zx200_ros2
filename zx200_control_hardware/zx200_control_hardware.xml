@@ -7,6 +7,14 @@
       The ROS2 Control for zx200.
     </description>
   </class>
+
+  <class name="zx200_control_hardware/Zx200UpperArmEffortHardware"
+         type="zx200_control_hardware::Zx200UpperArmEffortHardware"
+         base_class_type="hardware_interface::SystemInterface">
+    <description>
+      The ROS2 Control for zx200.
+    </description>
+  </class>
   
   <class name="zx200_control_hardware/Zx200UpperArmPositionUnityHardware"
          type="zx200_control_hardware::Zx200UpperArmPositionUnityHardware"

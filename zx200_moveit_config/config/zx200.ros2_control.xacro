@@ -10,9 +10,9 @@
                 <plugin>${plugin}</plugin>
             </hardware>
             <joint name="swing_joint">
-                <command_interface name="position"/>
-                <command_interface name="velocity"/>
-                <!-- <command_interface name="effort"/> -->
+                <!-- <command_interface name="position"/>
+                <command_interface name="velocity"/> -->
+                <command_interface name="effort"/>
                 <state_interface name="position">
                   <param name="initial_value">${initial_positions['swing_joint']}</param>
                 </state_interface>
@@ -20,9 +20,9 @@
                 <!-- <state_interface name="effort"/> -->
             </joint>
             <joint name="boom_joint">
-                <command_interface name="position"/>
-                <command_interface name="velocity"/>
-                <!-- <command_interface name="effort"/> -->
+                <!-- <command_interface name="position"/>
+                <command_interface name="velocity"/> -->
+                <command_interface name="effort"/>
                 <state_interface name="position">
                   <param name="initial_value">${initial_positions['boom_joint']}</param>
                 </state_interface>
@@ -30,9 +30,9 @@
                 <!-- <state_interface name="effort"/> -->
             </joint>
             <joint name="arm_joint">
-                <command_interface name="position"/>
-                <command_interface name="velocity"/>
-                <!-- <command_interface name="effort"/> -->
+                <!-- <command_interface name="position"/>
+                <command_interface name="velocity"/> -->
+                <command_interface name="effort"/>
                 <state_interface name="position">
                   <param name="initial_value">${initial_positions['arm_joint']}</param>
                 </state_interface>
@@ -40,9 +40,9 @@
                 <!-- <state_interface name="effort"/> -->
             </joint>
             <joint name="bucket_joint">
-                <command_interface name="position"/>
-                <command_interface name="velocity"/>
-                <!-- <command_interface name="effort"/> -->
+                <!-- <command_interface name="position"/>
+                <command_interface name="velocity"/> -->
+                <command_interface name="effort"/>
                 <state_interface name="position">
                   <param name="initial_value">${initial_positions['bucket_joint']}</param>
                 </state_interface>
@@ -50,9 +50,9 @@
                 <!-- <state_interface name="effort"/> -->
             </joint>
             <joint name="bucket_end_joint">
-                <command_interface name="position"/>
-                <command_interface name="velocity"/>
-                <!-- <command_interface name="effort"/> -->
+                <!-- <command_interface name="position"/>
+                <command_interface name="velocity"/> -->
+                <command_interface name="effort"/>
                 <state_interface name="position">
                   <param name="initial_value">${initial_positions['bucket_end_joint']}</param>
                 </state_interface>
