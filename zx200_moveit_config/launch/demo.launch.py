@@ -3,5 +3,12 @@ from moveit_configs_utils.launches import generate_demo_launch
 
 
 def generate_launch_description():
-    moveit_config = MoveItConfigsBuilder("zx200", package_name="zx200_moveit_config").to_moveit_configs()
+    robot_name = "zx200"
+    moveit_config = (
+        MoveItConfigsBuilder(
+            robot_name=robot_name, package_name=robot_name+"_moveit_config")
+        .robot_description(file_path="config/"+robot_name+"_effort.urdf.xacro")
+        .to_moveit_configs()
+    )
+
     return generate_demo_launch(moveit_config)
