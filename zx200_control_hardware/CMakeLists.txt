@@ -34,6 +34,7 @@ add_library(
   src/upper_arm_fake_hardware.cpp
   src/upper_arm_hardware.cpp
   src/upper_arm_effort_hardware.cpp
+  src/upper_arm_velocity_hardware.cpp
 )
 target_include_directories(
   ${PROJECT_NAME}

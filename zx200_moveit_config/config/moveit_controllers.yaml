@@ -2,22 +2,9 @@
 
 moveit_controller_manager: moveit_simple_controller_manager/MoveItSimpleControllerManager
 
-# default
 moveit_simple_controller_manager:
   controller_names:
-    # - manipulator_controller # default
     - upper_arm_controller # original
-
-  # manipulator_controller:
-  #   type: FollowJointTrajectory
-  #   action_ns: follow_joint_trajectory
-  #   default: true
-  #   joints:
-  #     - swing_joint
-  #     - boom_joint
-  #     - arm_joint
-  #     - bucket_joint
-  #     - bucket_end_joint
 
   upper_arm_controller:
     type: FollowJointTrajectory
