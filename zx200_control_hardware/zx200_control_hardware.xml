@@ -15,6 +15,14 @@
       The ROS2 Control for zx200.
     </description>
   </class>
+
+  <class name="zx200_control_hardware/Zx200UpperArmVelocityHardware"
+         type="zx200_control_hardware::Zx200UpperArmVelocityHardware"
+         base_class_type="hardware_interface::SystemInterface">
+    <description>
+      The ROS2 Control for zx200. Using velocity as command interface.
+    </description>
+  </class>
   
   <class name="zx200_control_hardware/Zx200UpperArmPositionUnityHardware"
          type="zx200_control_hardware::Zx200UpperArmPositionUnityHardware"
