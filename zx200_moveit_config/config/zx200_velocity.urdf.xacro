@@ -7,12 +7,6 @@
 
     <!-- Import control_xacro -->
     <xacro:include filename="zx200.ros2_control.xacro" />
-    <!-- <xacro:include filename="zx200.ros2_control.xacro">
-        <xacro:property name="name" value="trajectory_control" />
-        <xacro:property name="plugin" value="zx200_control_hardware/Zx200UpperArmVelocityHardware" />
-        <xacro:property name="command_interface" value="velocity" />
-        <xacro:property name="initial_positions_file" value="$(arg initial_positions_file)" />
-    </xacro:include> -->
     
-    <xacro:zx200_ros2_control name="trajectory_control" plugin="zx200_control_hardware/Zx200UpperArmVelocityHardware" initial_positions_file="$(arg initial_positions_file)"/>
+    <xacro:zx200_ros2_control name="trajectory_control" plugin="zx200_control_hardware/Zx200UpperArmVelocityHardware" command_interface="velocity" initial_positions_file="$(arg initial_positions_file)"/>
 </robot>
