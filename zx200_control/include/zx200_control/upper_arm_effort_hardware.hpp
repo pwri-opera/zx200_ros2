@@ -13,10 +13,10 @@
 #include <rclcpp/rclcpp.hpp>
 #include <std_msgs/msg/float64.hpp>
 #include <sensor_msgs/msg/joint_state.hpp>
-#include "zx200_control_hardware/visibility_control.h"
+#include "zx200_control/visibility_control.h"
 #include "com3_msgs/msg/joint_cmd.hpp"
 
-namespace zx200_control_hardware
+namespace zx200_control
 {
     class Zx200UpperArmEffortHardware : public hardware_interface::SystemInterface
     {

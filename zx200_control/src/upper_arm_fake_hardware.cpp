@@ -1,6 +1,6 @@
 #include <cstdio>
 
-#include "zx200_control_hardware/upper_arm_fake_hardware.hpp"
+#include "zx200_control/upper_arm_fake_hardware.hpp"
 #include "hardware_interface/types/hardware_interface_type_values.hpp"
 #include "rclcpp/rclcpp.hpp"
 
@@ -8,7 +8,7 @@
 #include "std_msgs/msg/string.hpp"
 using std::placeholders::_1;
 // 
-namespace zx200_control_hardware
+namespace zx200_control
 {
   hardware_interface::CallbackReturn Zx200UpperArmFakeHardware::on_init(
       const hardware_interface::HardwareInfo &info)
@@ -225,4 +225,4 @@ namespace zx200_control_hardware
 #include "pluginlib/class_list_macros.hpp"
 
 PLUGINLIB_EXPORT_CLASS(
-    zx200_control_hardware::Zx200UpperArmFakeHardware, hardware_interface::SystemInterface)
+    zx200_control::Zx200UpperArmFakeHardware, hardware_interface::SystemInterface)
