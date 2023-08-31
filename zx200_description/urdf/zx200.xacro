@@ -71,11 +71,11 @@
 
 	<!-- boom axis -->
 	<joint name="boom_joint" type="revolute">
-		<origin rpy="0 0.6108652382 0" xyz="0.22767 -0.040187 0.83669"/>
+		<origin rpy="0 ${radians(35)} 0" xyz="0.22767 -0.040187 0.83669"/>
 		<axis xyz="0 1 0"/>
 		<parent link="body_link"/>
 		<child link="boom_link"/>
-		<limit lower="${radians(-20)}" upper="${radians(55)}" effort="500" velocity="6.159937255"/>
+		<limit lower="${radians(-55)}" upper="${radians(20)}" effort="500" velocity="6.159937255"/>
 	</joint>
 
 
@@ -104,11 +104,11 @@
 	</link>
 
 	<joint name="arm_joint" type="revolute">
-		<origin rpy="0 0.2617993878 0" xyz="4.7878 0.010957 2.9959"/>
+		<origin rpy="0 ${radians(15)} 0" xyz="4.7878 0.010957 2.9959"/>
 		<axis xyz="0 1 0"/>
 		<parent link="boom_link"/>
 		<child link="arm_link"/>
-		<limit lower="${radians(45)}" upper="${radians(145)}" effort="500" velocity="6.159937255"/>
+		<limit lower="${radians(30)}" upper="${radians(130)}" effort="500" velocity="6.159937255"/>
 	</joint>
 
 	<link name="arm_link">
@@ -137,11 +137,11 @@
 
 	<!-- bucket axis -->
 	<joint name="bucket_joint" type="revolute">
-		<origin rpy="0 -0.3490658504 0" xyz="1.8954 -0.023546 2.1809"/>
+		<origin rpy="0 ${radians(-20)} 0" xyz="1.8954 -0.023546 2.1809"/>
 		<axis xyz="0 1 0"/>
 		<parent link="arm_link"/>
 		<child link="bucket_link"/>
-		<limit lower="${radians(-70)}" upper="${radians(80)}" effort="500" velocity="6.159937255"/>
+		<limit lower="${radians(-50)}" upper="${radians(100)}" effort="500" velocity="6.159937255"/>
 	</joint>
 
 	<link name="bucket_link">
