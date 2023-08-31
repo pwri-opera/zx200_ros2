@@ -19,38 +19,38 @@
  * library cannot have, but the consuming code must have inorder to link.
  */
 
-#ifndef ZX200_CONTROL_HARDWARE__VISIBILITY_CONTROL_H_
-#define ZX200_CONTROL_HARDWARE__VISIBILITY_CONTROL_H_
+#ifndef ZX200_CONTROL__VISIBILITY_CONTROL_H_
+#define ZX200_CONTROL__VISIBILITY_CONTROL_H_
 
 // This logic was borrowed (then namespaced) from the examples on the gcc wiki:
 //     https://gcc.gnu.org/wiki/Visibility
 
 #if defined _WIN32 || defined __CYGWIN__
 #ifdef __GNUC__
-#define ZX200_CONTROL_HARDWARE_EXPORT __attribute__((dllexport))
-#define ZX200_CONTROL_HARDWARE_IMPORT __attribute__((dllimport))
+#define ZX200_CONTROL_EXPORT __attribute__((dllexport))
+#define ZX200_CONTROL_IMPORT __attribute__((dllimport))
 #else
-#define ZX200_CONTROL_HARDWARE_EXPORT __declspec(dllexport)
-#define ZX200_CONTROL_HARDWARE_IMPORT __declspec(dllimport)
+#define ZX200_CONTROL_EXPORT __declspec(dllexport)
+#define ZX200_CONTROL_IMPORT __declspec(dllimport)
 #endif
-#ifdef ZX200_CONTROL_HARDWARE_BUILDING_DLL
-#define ZX200_CONTROL_HARDWARE_PUBLIC ZX200_CONTROL_HARDWARE_EXPORT
+#ifdef ZX200_CONTROL_BUILDING_DLL
+#define ZX200_CONTROL_PUBLIC ZX200_CONTROL_EXPORT
 #else
-#define ZX200_CONTROL_HARDWARE_PUBLIC ZX200_CONTROL_HARDWARE_IMPORT
+#define ZX200_CONTROL_PUBLIC ZX200_CONTROL_IMPORT
 #endif
-#define ZX200_CONTROL_HARDWARE_PUBLIC_TYPE ZX200_CONTROL_HARDWARE_PUBLIC
-#define ZX200_CONTROL_HARDWARE_LOCAL
+#define ZX200_CONTROL_PUBLIC_TYPE ZX200_CONTROL_PUBLIC
+#define ZX200_CONTROL_LOCAL
 #else
-#define ZX200_CONTROL_HARDWARE_EXPORT __attribute__((visibility("default")))
-#define ZX200_CONTROL_HARDWARE_IMPORT
+#define ZX200_CONTROL_EXPORT __attribute__((visibility("default")))
+#define ZX200_CONTROL_IMPORT
 #if __GNUC__ >= 4
-#define ZX200_CONTROL_HARDWARE_PUBLIC __attribute__((visibility("default")))
-#define ZX200_CONTROL_HARDWARE_LOCAL __attribute__((visibility("hidden")))
+#define ZX200_CONTROL_PUBLIC __attribute__((visibility("default")))
+#define ZX200_CONTROL_LOCAL __attribute__((visibility("hidden")))
 #else
-#define ZX200_CONTROL_HARDWARE_PUBLIC
-#define ZX200_CONTROL_HARDWARE_LOCAL
+#define ZX200_CONTROL_PUBLIC
+#define ZX200_CONTROL_LOCAL
 #endif
-#define ZX200_CONTROL_HARDWARE_PUBLIC_TYPE
+#define ZX200_CONTROL_PUBLIC_TYPE
 #endif
 
-#endif // ZX200_CONTROL_HARDWARE__VISIBILITY_CONTROL_H_
+#endif // ZX200_CONTROL__VISIBILITY_CONTROL_H_
