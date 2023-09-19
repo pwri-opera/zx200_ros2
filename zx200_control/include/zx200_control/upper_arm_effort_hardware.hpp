@@ -61,10 +61,10 @@ namespace zx200_control
             std::vector<double> effort_commands_;
             std::vector<double> position_states_;
             std::vector<double> velocity_states_;
-            std::vector<double> old_position_states_; // TODO: Delete after using velocity feedback via can
+            // std::vector<double> old_position_states_; // TODO: Delete after using velocity feedback via can
 
-            std::vector<double> predicted_positions_; // predicted position
-            std::vector<double> imu_joint_values_;
+            // std::vector<double> predicted_positions_; // predicted position
+            // std::vector<double> imu_joint_values_;
 
             std::shared_ptr<rclcpp::Node> node_;
             std::thread node_thread_;
