@@ -39,6 +39,8 @@ hardware_interface::CallbackReturn Zx200UpperArmEffortHardware::on_init(const ha
 
   position_states_.resize(info_.joints.size(), std::numeric_limits<double>::quiet_NaN());
   velocity_states_.resize(info_.joints.size(), std::numeric_limits<double>::quiet_NaN());
+  // position_states_.resize(info_.joints.size(), 0);
+  // velocity_states_.resize(info_.joints.size(), 0);
   // old_position_states_.resize(info_.joints.size(), 0);
   // predicted_positions_.resize(info_.joints.size(), 0);
 
