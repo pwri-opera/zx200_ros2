@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(zx200_control_hardware)
+project(zx200_control)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -53,7 +53,7 @@ ament_target_dependencies(
 )
 
 # Export hardware pligins
-pluginlib_export_plugin_description_file(hardware_interface zx200_control_hardware.xml)
+pluginlib_export_plugin_description_file(hardware_interface zx200_control.xml)
 
 
 install(
