@@ -37,10 +37,10 @@ hardware_interface::CallbackReturn Zx200UpperArmEffortHardware::on_init(const ha
   joint_cmd_msg_.velocity.resize(info_.joints.size(), 0);
   joint_cmd_msg_.effort.resize(info_.joints.size(), 0);
 
-  position_states_.resize(info_.joints.size(), std::numeric_limits<double>::quiet_NaN());
-  velocity_states_.resize(info_.joints.size(), std::numeric_limits<double>::quiet_NaN());
-  // position_states_.resize(info_.joints.size(), 0);
-  // velocity_states_.resize(info_.joints.size(), 0);
+  // position_states_.resize(info_.joints.size(), std::numeric_limits<double>::quiet_NaN());
+  // velocity_states_.resize(info_.joints.size(), std::numeric_limits<double>::quiet_NaN());
+  position_states_.resize(info_.joints.size(), 0);
+  velocity_states_.resize(info_.joints.size(), 0);
   // old_position_states_.resize(info_.joints.size(), 0);
   // predicted_positions_.resize(info_.joints.size(), 0);
 
@@ -136,19 +136,19 @@ hardware_interface::CallbackReturn
 Zx200UpperArmEffortHardware::on_activate(const rclcpp_lifecycle::State& /*previous_state*/)
 {
   // Set current jointstates.
-  RCLCPP_INFO(rclcpp::get_logger("Zx200UpperArmEffortHardware"), "Waiting to activate...");
-  bool state_is_nan = true;
+  // RCLCPP_INFO(rclcpp::get_logger("Zx200UpperArmEffortHardware"), "Waiting to activate...");
+  // bool state_is_nan = true;
 
-  while (state_is_nan)
-  {
-    state_is_nan = false;
+  // while (state_is_nan)
+  // {
+  //   state_is_nan = false;
 
-    for (int i = 0; i < info_.joints.size(); i++)
-    {
-      if (std::isnan(position_states_[i]) || std::isnan(velocity_states_[i]))
-        state_is_nan = true;
-    }
-  }
+  //   for (int i = 0; i < info_.joints.size(); i++)
+  //   {
+  //     if (std::isnan(position_states_[i]) || std::isnan(velocity_states_[i]))
+  //       state_is_nan = true;
+  //   }
+  // }
 
   // for(int i = 0; i < info_.joints.size(); i++){
   //   joint_cmd_msg_.position[i] = position_states_[i];
