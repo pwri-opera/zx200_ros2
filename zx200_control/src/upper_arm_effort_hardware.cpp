@@ -29,13 +29,21 @@ hardware_interface::CallbackReturn Zx200UpperArmEffortHardware::on_init(const ha
   node_thread_ = std::thread([this]() { rclcpp::spin(node_); });
 
   joint_cmd_msg_.joint_name.resize(info_.joints.size());
+  latest_joint_states_.name.resize(info_.joints.size());
+
   for (int i = 0; i < (int)info_.joints.size(); i++)
   {
     joint_cmd_msg_.joint_name[i] = info_.joints[i].name;
+    latest_joint_states_.name[i] = info_.joints[i].name;
   }
+
   joint_cmd_msg_.position.resize(info_.joints.size(), 0);
   joint_cmd_msg_.velocity.resize(info_.joints.size(), 0);
   joint_cmd_msg_.effort.resize(info_.joints.size(), 0);
+
+  latest_joint_states_.position.resize(info_.joints.size(), 0);
+  latest_joint_states_.velocity.resize(info_.joints.size(), 0);
+  latest_joint_states_.effort.resize(info_.joints.size(), 0);
 
   // position_states_.resize(info_.joints.size(), std::numeric_limits<double>::quiet_NaN());
   // velocity_states_.resize(info_.joints.size(), std::numeric_limits<double>::quiet_NaN());
@@ -51,7 +59,8 @@ hardware_interface::CallbackReturn Zx200UpperArmEffortHardware::on_init(const ha
   // imu_joint_values_.resize(info_.joints.size(), 0);
 
   /* input initial pose here not for real robot should get from init file */
-  position_states_[2] = 1;
+  latest_joint_states_.position[2] = 1;
+  // position_states_[2] = 1;
   // old_position_states_[2]=1;
   // predicted_positions_[2]=1;
   // imu_joint_values_[2]=1;
@@ -169,10 +178,31 @@ Zx200UpperArmEffortHardware::on_deactivate(const rclcpp_lifecycle::State& /*prev
 hardware_interface::return_type Zx200UpperArmEffortHardware::read(const rclcpp::Time& /*time*/,
                                                                   const rclcpp::Duration& /*period*/)
 {
-  // TODO: Fix to use velocity feedback via CAN
-  // old_position_states_ = position_states_;
-  // predicted_positions_ = imu_joint_values_;
-  // position_states_ = predicted_positions_;
+  // position_states_ = msg.position;
+  // velocity_states_ = msg.velocity;
+  for (int i = 0; i < latest_joint_states_.name.size(); i++)
+  {
+    if (latest_joint_states_.name[i] == "swing_joint")
+    {
+      position_states_[0] = latest_joint_states_.position[i];
+      velocity_states_[0] = latest_joint_states_.velocity[i];
+    }
+    else if (latest_joint_states_.name[i] == "boom_joint")
+    {
+      position_states_[1] = latest_joint_states_.position[i];
+      velocity_states_[1] = latest_joint_states_.velocity[i];
+    }
+    else if (latest_joint_states_.name[i] == "arm_joint")
+    {
+      position_states_[2] = latest_joint_states_.position[i];
+      velocity_states_[2] = latest_joint_states_.velocity[i];
+    }
+    else if (latest_joint_states_.name[i] == "bucket_joint")
+    {
+      position_states_[3] = latest_joint_states_.position[i];
+      velocity_states_[3] = latest_joint_states_.velocity[i];
+    }
+  }
 
   return hardware_interface::return_type::OK;
 }
@@ -196,32 +226,9 @@ hardware_interface::return_type Zx200UpperArmEffortHardware::write(const rclcpp:
 
 void Zx200UpperArmEffortHardware::imu_js_callback(const sensor_msgs::msg::JointState& msg)
 {
-  position_states_ = msg.position;
-  velocity_states_ = msg.velocity;
-  // for (int i = 0; i < msg.name.size(); i++)
-  // {
-  //   if(msg.name[i] == "swing_joint")
-  //   {
-  //     position_states_[0] = msg.position[i];
-  //     velocity_states_[0] = msg.velocity[i];
-  //   }
-  //   else if (msg.name[i] == "boom_joint")
-  //   {
-  //     position_states_[1] = msg.position[i];
-  //     velocity_states_[1] = msg.velocity[i];
-  //   }
-  //   else if (msg.name[i] == "arm_joint")
-  //   {
-  //     position_states_[2] = msg.position[i];
-  //     velocity_states_[2] = msg.velocity[i];
-  //   }
-  //   else if (msg.name[i] == "bucket_joint")
-  //   {
-  //     position_states_[3] = msg.position[i];
-  //     velocity_states_[3] = msg.velocity[i];
-  //   }
-  // }
+  latest_joint_states_ = msg;
 }
+
 }  // namespace zx200_control
 
 #include "pluginlib/class_list_macros.hpp"
