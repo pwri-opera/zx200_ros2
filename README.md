@@ -37,8 +37,8 @@ OPERA対応油圧ショベルzx200の土木研究所公開ROS2パッケージ群
 ### zx200_bringup:
 - zx200の実機を動作させる際に必要なノード群を一括起動するためのlaunch用のサブパッケージ
 
-### zx200_control_hardware:
-- [ros_control](http://wiki.ros.org/ros_control)の枠組みに倣い、作業機（=swing_joint, boom_joint, arm_joint, bucket_joint, bucket_end_joint）の部分をupper_arm_"command_interface"_contoller(JointTrajectoryController)という名称で実装したサブパッケージ
+### zx200_control:
+- [ros_control](http://wiki.ros.org/ros_control)の枠組みに倣い、作業機（=swing_joint, boom_joint, arm_joint, bucket_joint, bucket_end_joint）の部分をupper_arm_"command_interface名"_contoller(JointTrajectoryController)という名称で実装したサブパッケージ
 
 ### zx200_description:
 - zx200用のロボットモデルファイル(dae, xacro含む)群
