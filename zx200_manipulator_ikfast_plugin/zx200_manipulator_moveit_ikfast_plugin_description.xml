@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<library path="zx200_manipulator_moveit_ikfast_plugin">
+  <class name="zx200_manipulator/IKFastKinematicsPlugin" type="zx200_manipulator::IKFastKinematicsPlugin" base_class_type="kinematics::KinematicsBase">
+    <description>IKFast61 plugin for closed-form kinematics of zx200 manipulator</description>
+  </class>
+</library>

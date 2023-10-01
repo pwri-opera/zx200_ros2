@@ -1,0 +1,43 @@
+<library path="zx200_control">
+ 
+  <class name="zx200_control/Zx200UpperArmPositionHardware"
+         type="zx200_control::Zx200UpperArmPositionHardware"
+         base_class_type="hardware_interface::SystemInterface">
+    <description>
+      The ROS2 Control for zx200.
+    </description>
+  </class>
+
+  <class name="zx200_control/Zx200UpperArmEffortHardware"
+         type="zx200_control::Zx200UpperArmEffortHardware"
+         base_class_type="hardware_interface::SystemInterface">
+    <description>
+      The ROS2 Control for zx200.
+    </description>
+  </class>
+
+  <class name="zx200_control/Zx200UpperArmVelocityHardware"
+         type="zx200_control::Zx200UpperArmVelocityHardware"
+         base_class_type="hardware_interface::SystemInterface">
+    <description>
+      The ROS2 Control for zx200. Using velocity as command interface.
+    </description>
+  </class>
+  
+  <class name="zx200_control/Zx200UpperArmPositionUnityHardware"
+         type="zx200_control::Zx200UpperArmPositionUnityHardware"
+         base_class_type="hardware_interface::SystemInterface">
+    <description>
+      The ROS2 Control for zx200 on Unity.
+    </description>
+  </class>
+
+  <class name="zx200_control/Zx200UpperArmFakeHardware"
+         type="zx200_control::Zx200UpperArmFakeHardware"
+         base_class_type="hardware_interface::SystemInterface">
+    <description>
+      The ROS2 Control for zx200.
+    </description>
+  </class>
+
+</library>
