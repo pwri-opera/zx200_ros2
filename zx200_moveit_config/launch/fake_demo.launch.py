@@ -67,7 +67,7 @@ def launch_setup(context, *args, **kwargs):
     moveit_config = (
         MoveItConfigsBuilder(
             robot_name=robot_name_str, package_name=robot_name_str+"_moveit_config")
-        .robot_description(file_path="config/"+robot_name_str+"_fake"+".urdf.xacro")
+        .robot_description(file_path="config/"+robot_name_str+".urdf.xacro")
         .to_moveit_configs()
     )
 
