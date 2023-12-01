@@ -30,6 +30,6 @@ joint_limits:
     max_acceleration: 0
   swing_joint:
     has_velocity_limits: false
-    max_velocity: 0
+    max_velocity: 6.159937255
     has_acceleration_limits: false
     max_acceleration: 0
