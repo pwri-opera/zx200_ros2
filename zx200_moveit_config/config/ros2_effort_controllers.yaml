@@ -34,5 +34,10 @@ upper_arm_controller:
       # boom_joint: {p: 4.2, i: 0.0, d: 0.15}
       # arm_joint: {p: 4.1, i: 0.008, d: 0.025}
       # bucket_joint: {p: 1.4, i: 0.0, d: 0.04}
-
+    constraints:
+      goal_time: 60.0                   # Defaults to zero
+      # stopped_velocity_tolerance: 0.02 # Defaults to 0.01
+      bucket_joint:
+        # trajectory: 0.05               # Defaults to zero (ie. the tolerance is not enforced)
+        goal:       0.03               # Defaults to zero (ie. the tolerance is not enforced)
 
