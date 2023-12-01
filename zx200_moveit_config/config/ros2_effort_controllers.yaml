@@ -30,6 +30,11 @@ upper_arm_controller:
       boom_joint: {p: 0.0, i: 0.0, d: 0.0}
       arm_joint: {p: 0.0, i: 0.0, d: 0.0}
       bucket_joint: {p: 0.0, i: 0.0, d: 0.0}
+      # swing_joint: {p: 0.5, i: 0.0, d: 0.0}
+      # boom_joint: {p: 1.7, i: 0.0, d: 0.0}
+      # arm_joint: {p: 1.4, i: 0.0, d: 0.0}
+      # bucket_joint: {p: 0.8, i: 0.0, d: 0.0}
+      # zx120
       # swing_joint: {p: 0.75, i: 0.0, d: 0.05}
       # boom_joint: {p: 4.2, i: 0.0, d: 0.15}
       # arm_joint: {p: 4.1, i: 0.008, d: 0.025}
