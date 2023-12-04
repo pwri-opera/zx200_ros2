@@ -43,7 +43,7 @@
 		<axis xyz="0 0 1"/>
 		<parent link="track_link"/>
 		<child link="body_link"/>
-		<limit lower="${radians(-180)}" upper="${radians(180)}" effort="500" velocity="6.159937255"/>
+		<!-- <limit lower="${radians(-360)}" upper="${radians(360)}" effort="500" velocity="6.159937255"/> -->
 	</joint>
 
 	<link name="body_link">

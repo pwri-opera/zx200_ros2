@@ -31,7 +31,7 @@ upper_arm_controller:
       # arm_joint: {p: 0.0, i: 0.0, d: 0.0}
       # bucket_joint: {p: 0.0, i: 0.0, d: 0.0}
       # scales of velocity and acceleration are 1.0. Limits are defined in the joint_limits.yaml.
-      swing_joint: {p: 0.5, i: 0.0, d: 0.0}
+      swing_joint: {p: 0.5, i: 0.0, d: 0.0, angle_wraparound: true}
       boom_joint: {p: 1.7, i: 0.0, d: 0.0}
       arm_joint: {p: 1.4, i: 0.0, d: 0.0}
       bucket_joint: {p: 0.8, i: 0.0, d: 0.0}
