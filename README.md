@@ -39,6 +39,7 @@ OPERA対応油圧ショベルzx200の土木研究所公開ROS2パッケージ群
 
 ### zx200_control:
 - [ros_control](http://wiki.ros.org/ros_control)の枠組みに倣い、作業機（=swing_joint, boom_joint, arm_joint, bucket_joint, bucket_end_joint）の部分をupper_arm_"command_interface名"_contoller(JointTrajectoryController)という名称で実装したサブパッケージ
+- command interfaceをvelocityとしての作業機での動作は未確認
 
 ### zx200_description:
 - zx200用のロボットモデルファイル(dae, xacro含む)群
@@ -47,16 +48,18 @@ OPERA対応油圧ショベルzx200の土木研究所公開ROS2パッケージ群
 - zx200をunityシミュレータ(OperaSim-AGX, OperaSim-PhysX)上で動作させるのに必要なノード群を一括起動するためのlaunch用のサブパッケージ
 
 ### zx200_moveit_config:
-- zx200の作業機（=swing, boom, arm, bucketの4軸）のモーション制御のためのライブラリ
+- zx200の作業機（=swing, boom, arm, bucketの4軸）のモーション制御のための設定ファイル群
 - [MoveIt2](https://moveit.ros.org/)に準拠しMoveIt Setup Assistantを用いて作成
+- command interfaceごとに，.urdf.xacro, ros2_controllers.yamlが存在
 
 ### zx200_unity:
 - OPERAのUnityシミュレータ(OperaSim-AGX, OperaSim-PhysX)と連携するために必要なノード群を一括起動するためのlaunch用のサブパッケージ
 
 ## 各ROSノード群の起動方法
-- 実機動作に必要なROS2ノード群の起動方法  
-注）実機特有の非公開パッケージが含まれるため、実機以外の環境ではlaunchに失敗します
+- 実機動作に必要なROS2ノード群の起動方法
+
   ```bash
+  # 作業機のセットアップが完了した状態で
   $ ros2 launch zx200_bringup vehicle.launch.py
   ```
 - Unityシミュレータとの連携に必要なROS2ノード群の起動方法
