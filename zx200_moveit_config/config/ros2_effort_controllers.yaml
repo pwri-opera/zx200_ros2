@@ -34,7 +34,7 @@ upper_arm_controller:
       swing_joint: {p: 0.5, i: 0.0, d: 0.0, angle_wraparound: true}
       boom_joint: {p: 1.7, i: 0.0, d: 0.0}
       arm_joint: {p: 1.4, i: 0.0, d: 0.0}
-      bucket_joint: {p: 0.8, i: 0.0, d: 0.0}
+      bucket_joint: {p: 0.6, i: 0.0, d: 0.1}
       # zx120
       # swing_joint: {p: 0.75, i: 0.0, d: 0.05}
       # boom_joint: {p: 4.2, i: 0.0, d: 0.15}
