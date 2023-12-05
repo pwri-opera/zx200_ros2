@@ -43,7 +43,6 @@
 		<axis xyz="0 0 1"/>
 		<parent link="track_link"/>
 		<child link="body_link"/>
-		<!-- <limit lower="${radians(-360)}" upper="${radians(360)}" effort="500" velocity="6.159937255"/> -->
 	</joint>
 
 	<link name="body_link">
@@ -76,7 +75,7 @@
 		<axis xyz="0 1 0"/>
 		<parent link="body_link"/>
 		<child link="boom_link"/>
-		<limit lower="${radians(-55)}" upper="${radians(20)}" effort="500" velocity="6.159937255"/>
+		<limit lower="-1.137" upper="${radians(20)}" effort="500" velocity="6.159937255"/>
 	</joint>
 
 
@@ -109,7 +108,7 @@
 		<axis xyz="0 1 0"/>
 		<parent link="boom_link"/>
 		<child link="arm_link"/>
-		<limit lower="${radians(30)}" upper="${radians(130)}" effort="500" velocity="6.159937255"/>
+		<limit lower="0.594" upper="2.687" effort="500" velocity="6.159937255"/>
 	</joint>
 
 	<link name="arm_link">
@@ -142,7 +141,7 @@
 		<axis xyz="0 1 0"/>
 		<parent link="arm_link"/>
 		<child link="bucket_link"/>
-		<limit lower="${radians(-30)}" upper="${radians(120)}" effort="50000" velocity="6.159937255"/>
+		<limit lower="-0.622" upper="2.372" effort="50000" velocity="6.159937255"/>
 	</joint>
 
 	<link name="bucket_link">
