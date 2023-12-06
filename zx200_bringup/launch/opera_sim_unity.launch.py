@@ -26,7 +26,7 @@ def generate_launch_description():
     declare_robot_name = DeclareLaunchArgument(
         "robot_name", default_value="zx200")
     declare_command_interface_name = DeclareLaunchArgument(
-        "command_interface_name", default_value="effort")
+        "command_interface_name", default_value="position")
 
     ld = LaunchDescription()
 
@@ -43,11 +43,11 @@ def launch_setup(context, *args, **kwargs):
     command_interface_name_str = LaunchConfiguration(
         "command_interface_name").perform(context)
 
-    # Generate the MoveIt configuration
     moveit_config = (
         MoveItConfigsBuilder(
             robot_name=robot_name_str, package_name=robot_name_str+"_moveit_config")
-        .robot_description(file_path="config/"+robot_name_str+"_"+command_interface_name_str+".urdf.xacro")
+        # .robot_description(file_path="config/"+robot_name_str+"_"+command_interface_name_str+"_unity.urdf.xacro")
+        .robot_description(file_path="config/"+robot_name_str+"_unity.urdf.xacro")
         .to_moveit_configs()
     )
 
@@ -132,7 +132,8 @@ def generate_demo_launch_switch_command_interface(moveit_config, command_interfa
     )
 
     # Start the ros2_control node
-    ros2_controllers_file_name = "ros2_" + command_interface + "_controllers.yaml"
+    # ros2_controllers_file_name = "ros2_" + command_interface + "_unity_controllers.yaml"
+    ros2_controllers_file_name = "ros2_unity_controllers.yaml"
     ld.add_action(
         Node(
             package="controller_manager",
