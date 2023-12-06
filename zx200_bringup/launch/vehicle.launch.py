@@ -23,10 +23,6 @@ from moveit_configs_utils.launches import generate_demo_launch
 
 def generate_launch_description():
 
-    # robot_name = LaunchConfiguration("robot_name")
-    # command_interface_name = LaunchConfiguration(
-    #     "command_interface_name")  # effort or velocity
-
     declare_robot_name = DeclareLaunchArgument(
         "robot_name", default_value="zx200")
     declare_command_interface_name = DeclareLaunchArgument(
@@ -44,25 +40,9 @@ def generate_launch_description():
 def launch_setup(context, *args, **kwargs):
 
     # パラメータの設定
-    # context.launch_configurations["robot_name"] = "zx200"
-    # context.launch_configurations["command_interface_name"] = "effort"
     robot_name_str = LaunchConfiguration("robot_name").perform(context)
     command_interface_name_str = LaunchConfiguration(
         "command_interface_name").perform(context)
-
-    # robot_name = LaunchConfiguration("robot_name")
-    # command_interface_name = LaunchConfiguration(
-    #     "command_interface_name")  # effort or velocity
-
-    # declare_robot_name = DeclareLaunchArgument(
-    #     "robot_name", default_value="zx200")
-    # declare_command_interface_name = DeclareLaunchArgument(
-    #     "command_interface_name", default_value="effort")
-
-    # robot_name_str = context.perform_substitution(robot_name)
-    # command_interface_name_str = context.perform_substitution(
-    #     command_interface_name)
-    # print(type(robot_name_str))
 
     moveit_config = (
         MoveItConfigsBuilder(
@@ -71,17 +51,6 @@ def launch_setup(context, *args, **kwargs):
         .to_moveit_configs()
     )
 
-    # ld = LaunchDescription()
-
-    # ld.add_action(declare_robot_name)
-    # ld.add_action(declare_command_interface_name)
-
-    # ld.add_action(
-    #     generate_demo_launch_switch_command_interface(moveit_config, command_interface_name_str))
-    # ld.add_action(generate_demo_launch(moveit_config))
-
-    # return []
-    # return [generate_demo_launch(moveit_config)]
     return [generate_demo_launch_switch_command_interface(moveit_config, command_interface_name_str)]
 
 
