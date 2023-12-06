@@ -26,8 +26,8 @@ joint_limits:
   bucket_joint:
     has_velocity_limits: true
     max_velocity: 6.159937255
-    has_acceleration_limits: false
-    max_acceleration: 0
+    has_acceleration_limits: true
+    max_acceleration: 0.5
   swing_joint:
     has_velocity_limits: false
     max_velocity: 6.159937255
