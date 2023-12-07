@@ -25,6 +25,7 @@ upper_arm_controller:
     state_interfaces:
       - position
       - velocity
+    state_publish_rate: 100.0  # Hz
     gains: # TODO: Fix for zx200
       swing_joint: {p: 1.0, i: 0.0, d: 0.0}
       boom_joint: {p: 0.0, i: 0.0, d: 0.0}
