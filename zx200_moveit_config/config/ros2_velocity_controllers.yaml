@@ -28,7 +28,7 @@ upper_arm_controller:
     state_publish_rate: 100.0  # Hz
     gains: # TODO: Fix for zx200
       swing_joint: {p: 1.0, i: 0.0, d: 0.0}
-      boom_joint: {p: 0.0, i: 0.0, d: 0.0}
+      boom_joint: {p: 1.4, i: 0.0, d: 0.0}
       arm_joint: {p: 1.5, i: 0.0, d: 0.0}
       bucket_joint: {p: 1.0, i: 0.0, d: 0.0}
     constraints:
