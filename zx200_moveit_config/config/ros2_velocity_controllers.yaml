@@ -26,6 +26,7 @@ upper_arm_controller:
       - position
       - velocity
     state_publish_rate: 100.0  # Hz
+    # interpolation_method: "none"
     gains: # TODO: Fix for zx200
       swing_joint: {p: 1.0, i: 0.0, d: 0.0, angle_wraparound: true}
       boom_joint: {p: 1.4, i: 0.0, d: 0.0}
