@@ -46,8 +46,6 @@ OPERA 対応油圧ショベル zx200 の土木研究所公開 ROS2 パッケー�
 の hardware interface を upper_arm_"command_interface名"_hardware という
 名称で実装したサブパッケージ
 
-> **TODO:** command interfaceをvelocityとしての作業機での動作は未確認
-
 > **TODO:** upper_arm_unity_hardware の名前を使用している command interface がわかるように修正（現状は position）．
 
 > **TODO:** OperaSim-PhysX が JointCmd 型に対応次第，upper_arm_unity_hardware を修正．
@@ -56,12 +54,12 @@ OPERA 対応油圧ショベル zx200 の土木研究所公開 ROS2 パッケー�
 - zx200 用のロボットモデルファイル (dae, xacro含む) 群
 
 ### zx200_unity:
-- zx200をunityシミュレータ(OperaSim-AGX, OperaSim-PhysX)上で動作させるのに必要なノード群を一括起動するためのlaunch用のサブパッケージ
+- zx200 を Unity シミュレータ (OperaSim-AGX, OperaSim-PhysX) 上で動作させるのに必要なノード群を一括起動するための launch 用のサブパッケージ
 
 ### zx200_moveit_config:
-- zx200の作業機（swing, boom, arm, bucketの4軸）のモーション制御のための設定ファイル群
-- [MoveIt2](https://moveit.ros.org/)に準拠しMoveIt Setup Assistantを用いて作成したコンフィグファイルがベース
-- command interfaceごとに，`zx200_~.urdf.xacro`, `ros2_~_controllers.yaml`が存在
+- zx200 の作業機（swing, boom, arm, bucketの4軸）のモーション制御のための設定ファイル群
+- [MoveIt2](https://moveit.ros.org/)に準拠しMoveIt Setup Assistant を用いて作成したコンフィグファイルがベース
+- command interface ごとに，`zx200_~.urdf.xacro`, `ros2_~_controllers.yaml`が存在
 
 
 ## 各ROSノード群の起動方法
