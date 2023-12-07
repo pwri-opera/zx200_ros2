@@ -100,4 +100,4 @@ OPERA 対応油圧ショベル zx200 の土木研究所公開 ROS2 パッケー�
 ### vehicle.launch.py実行時のノード/トピックパイプライン（rqt_graph）  
 **注:** zx200実機上でのみ実行可能
 
-> **TODO:** vehicle.launch.py 実行時の rqt_graph のキャプチャを追加
+![zx200_ros2_effort_rosgraph](https://github.com/pwri-opera/zx200_ros2/assets/46485303/30f95979-99f7-4810-9ae2-e4ad261bb30b)
