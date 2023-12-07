@@ -61,16 +61,13 @@ namespace zx200_control
             // std::vector<double> effort_commands_;
             std::vector<double> position_states_;
             std::vector<double> velocity_states_;
-            std::vector<double> old_position_states_; // TODO: Delete after using velocity feedback via can
-
-            std::vector<double> predicted_positions_; // predicted position
-            std::vector<double> imu_joint_values_;
 
             std::shared_ptr<rclcpp::Node> node_;
             std::thread node_thread_;
             rclcpp::Publisher<com3_msgs::msg::JointCmd>::SharedPtr joint_cmd_pub_;
             rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr imu_js_sub_;
             com3_msgs::msg::JointCmd joint_cmd_msg_;
+            sensor_msgs::msg::JointState latest_joint_states_;
     };
 }
 #endif //UPPER_ARM_VELOCITY_CONTROLLER_HPP_
