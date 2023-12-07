@@ -24,9 +24,9 @@ upper_arm_controller:
       # - effort
     state_interfaces:
       - position
-      - velocity
+      # - velocity
     gains: # TODO: Fix for zx200
-      swing_joint: {p: 0.0, i: 0.0, d: 0.0}
+      swing_joint: {p: 0.0, i: 0.0, d: 0.0, angle_wraparound: true}
       boom_joint: {p: 0.0, i: 0.0, d: 0.0}
       arm_joint: {p: 0.0, i: 0.0, d: 0.0}
       bucket_joint: {p: 0.0, i: 0.0, d: 0.0}
