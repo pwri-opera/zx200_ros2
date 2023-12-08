@@ -70,8 +70,9 @@ OPERA 対応油圧ショベル zx200 の土木研究所公開 ROS2 パッケー�
 2. 車載PCにてターミナルを起動し，以下のコマンドを実行
 
   ```bash
-  # 作業機のセットアップ(油圧ロック解除まで)が完了した状態で
-  ros2 launch zx200_bringup vehicle.launch.py
+  # 作業機のセットアップ(油圧ロック解除まで)が完了した状態で実行
+  # command_interface_nameは"effort"か"velocity" 
+  ros2 launch zx200_bringup vehicle.launch.py command_interface_name:=<commnad_interface_name>
   ```
 > **注:** rvizを使用する場合，RDP接続した車載PCにてターミナルを起動し実行する．SSH 接続だとlaunchの実行時にエラーが発生．
 
