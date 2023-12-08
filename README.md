@@ -26,10 +26,6 @@ OPERA 対応油圧ショベル zx200 の土木研究所公開 ROS2 パッケー�
   $ sudo apt install python3-rosdep2 
   $ rosdep update
   $ rosdep install -i --from-path src --rosdistro humble -y 
-  <!--
-  $ git clone https://github.com/strv/vcstool-utils.git
-  $ ./vcstool-utils/import_all.sh -s .rosinstall ~/catkin_ws/src
-  -->
   $ colcon build --symlink-install 
   $ . install/setup.bash
   ```
@@ -83,18 +79,13 @@ OPERA 対応油圧ショベル zx200 の土木研究所公開 ROS2 パッケー�
   <!-- ```bash
   ros2 launch zx200_unity zx200_standby.launch.py
   ``` -->
-  <!-- **ターミナル1:**
-  ```bash
-  ros2 launch zx200_bringup opera_sim_unity.launch.py
-  ``` -->
 
 ## ハードウェアシステム
 > **TODO:** zx200のハードウェアのシステム構成を追加
 
-
 ## ソフトウェアシステム
-### opera_sim_unity.launch.py 実行時のノード/トピックパイプライン（rqt_graph）
-> **TODO:** opera_sim_unity.launch.py 実行時の rqt_graph のキャプチャを追加
+### zx200_standby.launch.py 実行時のノード/トピックパイプライン（rqt_graph）
+> **TODO:** zx_200_standby.launch.py 実行時の rqt_graph のキャプチャを追加
 
 ### vehicle.launch.py実行時のノード/トピックパイプライン（rqt_graph）  
 **注:** zx200実機上でのみ実行可能
