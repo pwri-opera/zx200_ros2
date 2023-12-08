@@ -59,7 +59,7 @@ OPERA 対応油圧ショベル zx200 の土木研究所公開 ROS2 パッケー�
 
 
 ## 各ROSノード群の起動方法
-### 実機動作（Rviz上で目標姿勢を決定）の場合
+### 実機動作（Rviz上で目標姿勢を決定）
 
 1. 車載PCにRDP接続
 
@@ -74,18 +74,24 @@ OPERA 対応油圧ショベル zx200 の土木研究所公開 ROS2 パッケー�
 
 3. Rviz 上で目標姿勢を定め，`plan & execute` ボタンで軌道を計画・実行
 
-### OperaSim の場合
+### OperaSim と連携
 - [OperaSim-AGX](https://github.com/pwri-opera/OperaSim-AGX), [OperaSim-PhysX](https://github.com/pwri-opera/OperaSim-PhysX) の README を参照
   <!-- ```bash
   ros2 launch zx200_unity zx200_standby.launch.py
   ``` -->
+
+### Rviz 上でのみ表示
+`mock_components/GenericSystem` を使用し，Rviz 上で zx200 を表示．move_group_interface等の動作確認時に使用．
+  ```bash
+  ros2 launch zx200_moveit_config fake_demo.launch.py
+  ```
 
 ## ハードウェアシステム
 > **TODO:** zx200のハードウェアのシステム構成を追加
 
 ## ソフトウェアシステム
 ### zx200_standby.launch.py 実行時のノード/トピックパイプライン（rqt_graph）
-> **TODO:** zx_200_standby.launch.py 実行時の rqt_graph のキャプチャを追加
+> **TODO:** zx200_standby.launch.py 実行時の rqt_graph のキャプチャを追加
 
 ### vehicle.launch.py実行時のノード/トピックパイプライン（rqt_graph）  
 **注:** zx200実機上でのみ実行可能
