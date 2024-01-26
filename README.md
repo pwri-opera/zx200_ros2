@@ -67,11 +67,14 @@ OPERA対応油圧ショベルzx200の土木研究所公開ROS2パッケージ群
 ## ハードウェアシステム
 zx200のハードウェアのシステム構成を以下のブロック図へ示します
 <!-- ![MicrosoftTeams-image (1)](https://github.com/pwri-opera/zx200_ros2/assets/24404939/a49534cc-13b1-461f-9368-152daabae51e) -->
+（準備中）
 
 ## ソフトウェアシステム
 ### roslaunch zx200_unity zx200_standy.launch.py実行時のノード/トピックパイプライン（rqt_graph）
 <!-- ![rosgraph_ros2_sim](https://github.com/pwri-opera/zx200_ros2/assets/24404939/1192aea7-bae1-4220-b8fc-18c0c0e2e3b1) -->
+（準備中）
 
 ### roslaunch zx200_bringup zx200_vehicle.launch.py実行時のノード/トピックパイプライン（rqt_graph）  
 注）zx200実機上でのみ実行可能です
 <!-- ![rosgraph](https://github.com/pwri-opera/zx200_ros2/assets/24404939/7cb2ddb1-da25-43c3-8b22-58f838081da4) -->
+（準備中）
