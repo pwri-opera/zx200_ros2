@@ -35,7 +35,6 @@ OPERA 対応油圧ショベル zx200 の土木研究所公開 ROS2 パッケー�
 ### zx200_bringup:
 - excavator_com3_ros を除く，zx200 の実機を動作させる際に必要なノード群を一括起動するための launch 用サブパッケージ
 
-
 ### zx200_control:
 - [ros_control](http://wiki.ros.org/ros_control) の枠組みに倣い，
 作業機 (=swing_joint, boom_joint, arm_joint, bucket_joint, bucket_end_joint) 
@@ -56,7 +55,6 @@ OPERA 対応油圧ショベル zx200 の土木研究所公開 ROS2 パッケー�
 - zx200 の作業機（swing, boom, arm, bucketの4軸）のモーション制御のための設定ファイル群
 - [MoveIt2](https://moveit.ros.org/)に準拠しMoveIt Setup Assistant を用いて作成したコンフィグファイルがベース
 - command interface ごとに，`zx200_~.urdf.xacro`, `ros2_~_controllers.yaml`が存在
-
 
 ## 各ROSノード群の起動方法
 ### 実機動作（Rviz上で目標姿勢を決定）
@@ -89,13 +87,16 @@ OPERA 対応油圧ショベル zx200 の土木研究所公開 ROS2 パッケー�
 ## ハードウェアシステム
 zx200のハードウェアのシステム構成を以下のブロック図へ示します
 <!-- ![MicrosoftTeams-image (1)](https://github.com/pwri-opera/zx200_ros2/assets/24404939/a49534cc-13b1-461f-9368-152daabae51e) -->
-（準備中）
+![zx200_hardware_system](https://github.com/pwri-opera/zx200_ros2/assets/24404939/f89d62a0-375a-4f22-9182-08c6cccc9756)
 
 ## ソフトウェアシステム
-### roslaunch zx200_unity zx200_standy.launch.py実行時のノード/トピックパイプライン（rqt_graph）
-<!-- ![rosgraph_ros2_sim](https://github.com/pwri-opera/zx200_ros2/assets/24404939/1192aea7-bae1-4220-b8fc-18c0c0e2e3b1) -->
-（準備中）
+### ros2 launch zx200_moveit_config fake_demo.launch.py実行時のノード/トピックパイプライン（rqt_graph）
+![rosgraph_zx200_demo_fake](https://github.com/pwri-opera/zx200_ros2/assets/24404939/9e75e0aa-3aa6-4ec2-ba27-f63a2867c351)
 
-### roslaunch zx200_bringup zx200_vehicle.launch.py実行時のノード/トピックパイプライン（rqt_graph）  
+### ros2 launch zx200_unity zx200_standy.launch.py実行時のノード/トピックパイプライン（rqt_graph）
+<!-- ![rosgraph_ros2_sim](https://github.com/pwri-opera/zx200_ros2/assets/24404939/1192aea7-bae1-4220-b8fc-18c0c0e2e3b1) -->
+![rosgraph_zx200_unity_standby](https://github.com/pwri-opera/zx200_ros2/assets/24404939/e6823a08-bf39-4257-8ffa-6537a19d2407)
+
+### ros2 launch zx200_bringup zx200_vehicle.launch.py実行時のノード/トピックパイプライン（rqt_graph）  
 注）zx200実機上でのみ実行可能です
 ![zx200_ros2_effort_rosgraph](https://github.com/pwri-opera/zx200_ros2/assets/46485303/30f95979-99f7-4810-9ae2-e4ad261bb30b)
