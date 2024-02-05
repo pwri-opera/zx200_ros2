@@ -178,30 +178,11 @@ Zx200UpperArmEffortHardware::on_deactivate(const rclcpp_lifecycle::State& /*prev
 hardware_interface::return_type Zx200UpperArmEffortHardware::read(const rclcpp::Time& /*time*/,
                                                                   const rclcpp::Duration& /*period*/)
 {
-  // position_states_ = msg.position;
-  // velocity_states_ = msg.velocity;
   for (int i = 0; i < latest_joint_states_.name.size(); i++)
   {
-    if (latest_joint_states_.name[i] == "swing_joint")
-    {
-      position_states_[0] = latest_joint_states_.position[i];
-      velocity_states_[0] = latest_joint_states_.velocity[i];
-    }
-    else if (latest_joint_states_.name[i] == "boom_joint")
-    {
-      position_states_[1] = latest_joint_states_.position[i];
-      velocity_states_[1] = latest_joint_states_.velocity[i];
-    }
-    else if (latest_joint_states_.name[i] == "arm_joint")
-    {
-      position_states_[2] = latest_joint_states_.position[i];
-      velocity_states_[2] = latest_joint_states_.velocity[i];
-    }
-    else if (latest_joint_states_.name[i] == "bucket_joint")
-    {
-      position_states_[3] = latest_joint_states_.position[i];
-      velocity_states_[3] = latest_joint_states_.velocity[i];
-    }
+    position_states_[i] = latest_joint_states_.position[i];
+    velocity_states_[i] = latest_joint_states_.velocity[i];
+
   }
 
   return hardware_interface::return_type::OK;
