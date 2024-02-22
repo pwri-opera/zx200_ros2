@@ -26,10 +26,6 @@ OPERA 対応油圧ショベル zx200 の土木研究所公開 ROS2 パッケー�
   $ sudo apt install python3-rosdep2 
   $ rosdep update
   $ rosdep install -i --from-path src --rosdistro humble -y 
-  <!--
-  $ git clone https://github.com/strv/vcstool-utils.git
-  $ ./vcstool-utils/import_all.sh -s .rosinstall ~/catkin_ws/src
-  -->
   $ colcon build --symlink-install 
   $ . install/setup.bash
   ```
@@ -38,7 +34,6 @@ OPERA 対応油圧ショベル zx200 の土木研究所公開 ROS2 パッケー�
 
 ### zx200_bringup:
 - excavator_com3_ros を除く，zx200 の実機を動作させる際に必要なノード群を一括起動するための launch 用サブパッケージ
-
 
 ### zx200_control:
 - [ros_control](http://wiki.ros.org/ros_control) の枠組みに倣い，
@@ -61,41 +56,47 @@ OPERA 対応油圧ショベル zx200 の土木研究所公開 ROS2 パッケー�
 - [MoveIt2](https://moveit.ros.org/)に準拠しMoveIt Setup Assistant を用いて作成したコンフィグファイルがベース
 - command interface ごとに，`zx200_~.urdf.xacro`, `ros2_~_controllers.yaml`が存在
 
-
 ## 各ROSノード群の起動方法
-### 実機動作（Rviz上で目標姿勢を決定）の場合
+### 実機動作（Rviz上で目標姿勢を決定）
 
 1. 車載PCにRDP接続
 
 2. 車載PCにてターミナルを起動し，以下のコマンドを実行
 
   ```bash
-  # 作業機のセットアップ(油圧ロック解除まで)が完了した状態で
-  ros2 launch zx200_bringup vehicle.launch.py
+  # 作業機のセットアップ(油圧ロック解除まで)が完了した状態で実行
+  # command_interface_nameは"effort"か"velocity" 
+  ros2 launch zx200_bringup vehicle.launch.py command_interface_name:=<commnad_interface_name>
   ```
 > **注:** rvizを使用する場合，RDP接続した車載PCにてターミナルを起動し実行する．SSH 接続だとlaunchの実行時にエラーが発生．
 
 3. Rviz 上で目標姿勢を定め，`plan & execute` ボタンで軌道を計画・実行
 
-### OperaSim の場合
+### OperaSim と連携
 - [OperaSim-AGX](https://github.com/pwri-opera/OperaSim-AGX), [OperaSim-PhysX](https://github.com/pwri-opera/OperaSim-PhysX) の README を参照
   <!-- ```bash
   ros2 launch zx200_unity zx200_standby.launch.py
   ``` -->
-  <!-- **ターミナル1:**
+
+### Rviz 上でのみ表示
+`mock_components/GenericSystem` を使用し，Rviz 上で zx200 を表示．move_group_interface等の動作確認時に使用．
   ```bash
-  ros2 launch zx200_bringup opera_sim_unity.launch.py
-  ``` -->
+  ros2 launch zx200_moveit_config fake_demo.launch.py
+  ```
 
 ## ハードウェアシステム
-> **TODO:** zx200のハードウェアのシステム構成を追加
-
+zx200のハードウェアのシステム構成を以下のブロック図へ示します
+<!-- ![MicrosoftTeams-image (1)](https://github.com/pwri-opera/zx200_ros2/assets/24404939/a49534cc-13b1-461f-9368-152daabae51e) -->
+![zx200_hardware_system](https://github.com/pwri-opera/zx200_ros2/assets/24404939/f89d62a0-375a-4f22-9182-08c6cccc9756)
 
 ## ソフトウェアシステム
-### opera_sim_unity.launch.py 実行時のノード/トピックパイプライン（rqt_graph）
-> **TODO:** opera_sim_unity.launch.py 実行時の rqt_graph のキャプチャを追加
+### ros2 launch zx200_moveit_config fake_demo.launch.py実行時のノード/トピックパイプライン（rqt_graph）
+![rosgraph_zx200_demo_fake](https://github.com/pwri-opera/zx200_ros2/assets/24404939/9e75e0aa-3aa6-4ec2-ba27-f63a2867c351)
 
-### vehicle.launch.py実行時のノード/トピックパイプライン（rqt_graph）  
-**注:** zx200実機上でのみ実行可能
+### ros2 launch zx200_unity zx200_standy.launch.py実行時のノード/トピックパイプライン（rqt_graph）
+<!-- ![rosgraph_ros2_sim](https://github.com/pwri-opera/zx200_ros2/assets/24404939/1192aea7-bae1-4220-b8fc-18c0c0e2e3b1) -->
+![rosgraph_zx200_unity_standby](https://github.com/pwri-opera/zx200_ros2/assets/24404939/e6823a08-bf39-4257-8ffa-6537a19d2407)
 
+### ros2 launch zx200_bringup zx200_vehicle.launch.py実行時のノード/トピックパイプライン（rqt_graph）  
+注）zx200実機上でのみ実行可能です
 ![zx200_ros2_effort_rosgraph](https://github.com/pwri-opera/zx200_ros2/assets/46485303/30f95979-99f7-4810-9ae2-e4ad261bb30b)
