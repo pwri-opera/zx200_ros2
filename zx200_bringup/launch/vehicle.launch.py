@@ -81,7 +81,7 @@ def generate_demo_launch_switch_command_interface(moveit_config, command_interfa
             description="By default, we are not in debug mode",
         )
     )
-    ld.add_action(DeclareBooleanLaunchArg("use_rviz", default_value=True))
+    ld.add_action(DeclareBooleanLaunchArg("use_rviz", default_value=False))
 
     # If there are virtual joints, broadcast static tf by including virtual_joints launch
     virtual_joints_launch = (
