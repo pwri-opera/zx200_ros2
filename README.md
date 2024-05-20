@@ -61,7 +61,20 @@ OPERA 対応油圧ショベル zx200 の土木研究所公開 ROS2 パッケー�
 
 1. 車載PCにRDP接続
 
-2. 車載PCにてターミナルを起動し，以下のコマンドを実行
+2. 車載PCと自動運転コントローラのCANベースcom3通信開始（アライブカウンタ入力＋エンジンローアイドル指令）．以下のコマンドを実行
+  ```bash
+  ros2 launch zx200_com3_ros zx200_com3_ros.launch.py vehicle.launch.py command_interface_name:=<commnad_interface_name>
+  ```
+3. ロック解除リモコンを用いてエンジン始動
+
+4. com3_ros直下のsample_ros_cmd.shをfront_control_modeを指定して実行
+   - front_control_mode=0:作業機のコントロールをdisable
+   - front_control_mode=1:作業機をeffortコントロールモードでenable
+   - front_control_mode=2:作業機をvelocityコントロールモードでenable
+
+5.ロック解除リモコンを用いて油圧ロックを解除
+
+6. 車載PCにてターミナルを起動し，以下のコマンドを実行
 
   ```bash
   # 作業機のセットアップ(油圧ロック解除まで)が完了した状態で実行
