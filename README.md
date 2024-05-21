@@ -63,7 +63,7 @@ OPERA 対応油圧ショベル zx200 の土木研究所公開 ROS2 パッケー�
 
 2. 車載PCと自動運転コントローラのCANベースcom3通信開始（アライブカウンタ入力＋エンジンローアイドル指令）．以下のコマンドを実行
   ```bash
-  ros2 launch zx200_com3_ros zx200_com3_ros.launch.py vehicle.launch.py command_interface_name:=<commnad_interface_name>
+  ros2 launch zx200_com3_ros zx200_com3_ros.launch.py
   ```
 3. ロック解除リモコンを用いてエンジン始動
 
