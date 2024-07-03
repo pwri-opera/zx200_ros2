@@ -72,18 +72,19 @@ OPERA 対応油圧ショベル zx200 の土木研究所公開 ROS2 パッケー�
    - front_control_mode=1:作業機をeffortコントロールモードでenable
    - front_control_mode=2:作業機をvelocityコントロールモードでenable
 
-5.ロック解除リモコンを用いて油圧ロックを解除
+5. ロック解除リモコンを用いて油圧ロックを解除
 
 6. 車載PCにてターミナルを起動し，以下のコマンドを実行
 
   ```bash
   # 作業機のセットアップ(油圧ロック解除まで)が完了した状態で実行
-  # command_interface_nameは"effort"か"velocity" 
-  ros2 launch zx200_bringup vehicle.launch.py command_interface_name:=<commnad_interface_name>
+  # command_interface_nameは"effort"か"velocity"
+  # use_rvizはTrueかFalse
+  ros2 launch zx200_bringup vehicle.launch.py command_interface_name:=<commnad_interface_name> use_rviz:=<use_rviz>
   ```
-> **注:** rvizを使用する場合，RDP接続した車載PCにてターミナルを起動し実行する．SSH 接続だとlaunchの実行時にエラーが発生．
+> **注:** rvizを使用する場合，RDP接続した車載PCにてターミナルを起動する。SSH 接続だとlaunchの実行時にエラーが発生．
 
-3. Rviz 上で目標姿勢を定め，`plan & execute` ボタンで軌道を計画・実行
+7. Rviz 上で目標姿勢を定め，`plan & execute` ボタンで軌道を計画・実行
 
 ### OperaSim と連携
 - [OperaSim-AGX](https://github.com/pwri-opera/OperaSim-AGX), [OperaSim-PhysX](https://github.com/pwri-opera/OperaSim-PhysX) の README を参照
