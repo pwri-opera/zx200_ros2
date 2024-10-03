@@ -25,6 +25,79 @@
         <joint name="bucket_joint" value="0"/>
         <joint name="swing_joint" value="0"/>
     </group_state>
+
+    <!-- Arm group -->
+    <group_state name="exp_arm_home" group="manipulator">
+        <joint name="arm_joint" value="2"/>
+        <joint name="boom_joint" value="-0.9"/>
+        <joint name="bucket_end_joint" value="0"/>
+        <joint name="bucket_joint" value="0"/>
+        <joint name="swing_joint" value="0"/>
+    </group_state>
+    <group_state name="exp_arm_goal" group="manipulator">
+        <joint name="arm_joint" value="1"/>
+        <joint name="boom_joint" value="-0.9"/>
+        <joint name="bucket_end_joint" value="0"/>
+        <joint name="bucket_joint" value="0"/>
+        <joint name="swing_joint" value="0"/>
+    </group_state>
+
+    <!-- Boom group -->
+    <group_state name="exp_boom_home" group="manipulator">
+        <joint name="arm_joint" value="0.7"/>
+        <joint name="boom_joint" value="0.0"/>
+        <joint name="bucket_end_joint" value="0"/>
+        <joint name="bucket_joint" value="0"/>
+        <joint name="swing_joint" value="0"/>
+    </group_state>
+    <group_state name="exp_boom_goal" group="manipulator">
+        <joint name="arm_joint" value="0.7"/>
+        <joint name="boom_joint" value="-1.0"/>
+        <joint name="bucket_end_joint" value="0"/>
+        <joint name="bucket_joint" value="0"/>
+        <joint name="swing_joint" value="0"/>
+    </group_state>
+
+    <!-- Bucket group -->
+    <group_state name="exp_bucket_home" group="manipulator">
+        <joint name="arm_joint" value="1.7"/>
+        <joint name="boom_joint" value="-0.9"/>
+        <joint name="bucket_end_joint" value="0"/>
+        <joint name="bucket_joint" value="0"/>
+        <joint name="swing_joint" value="0"/>
+    </group_state>
+    <group_state name="exp_bucket_goal" group="manipulator">
+        <joint name="arm_joint" value="1.7"/>
+        <joint name="boom_joint" value="-0.9"/>
+        <joint name="bucket_end_joint" value="0"/>
+        <joint name="bucket_joint" value="1.5"/>
+        <joint name="swing_joint" value="0"/>
+    </group_state>
+
+    <!-- Swing group -->
+    <group_state name="exp_swing_home" group="manipulator">
+        <joint name="arm_joint" value="1.7"/>
+        <joint name="boom_joint" value="-0.9"/>
+        <joint name="bucket_end_joint" value="0"/>
+        <joint name="bucket_joint" value="0"/>
+        <joint name="swing_joint" value="0"/>
+    </group_state>
+    <group_state name="exp_swing_right" group="manipulator">
+        <joint name="arm_joint" value="1.7"/>
+        <joint name="boom_joint" value="-0.9"/>
+        <joint name="bucket_end_joint" value="0"/>
+        <joint name="bucket_joint" value="0"/>
+        <joint name="swing_joint" value="0.785398"/>
+    </group_state>
+    <group_state name="exp_swing_left" group="manipulator">
+        <joint name="arm_joint" value="1.7"/>
+        <joint name="boom_joint" value="-0.9"/>
+        <joint name="bucket_end_joint" value="0"/>
+        <joint name="bucket_joint" value="0"/>
+        <joint name="swing_joint" value="-0.785398"/>
+    </group_state>
+
+
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
     <disable_collisions link1="arm_link" link2="body_link" reason="Never"/>
     <disable_collisions link1="arm_link" link2="boom_link" reason="Adjacent"/>
