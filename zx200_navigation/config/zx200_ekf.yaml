@@ -1,0 +1,42 @@
+zx200:
+    ekf_global:
+        ros__parameters:
+            # for wheel and imu fusion
+            use_sim_time: true
+            debug: false
+            frequency: 10.0
+            transform_time_offset: 0.0
+            transform_timeout: 0.0
+            print_diagnostics: true
+            publish_acceleration: true
+            print_diagnostics: true
+            publish_tf: true
+            two_d_mode: true
+            publish_map_frame:  true    # map→odom を出力
+            publish_odom_frame: true    # odom→base_link を出力
+
+            map_frame: map
+            odom_frame: odom
+            base_link_frame: base_link
+            world_frame: map
+
+
+            #odom0: wheel odometry + GNSS Compass
+            odom0: odom0
+            odom0_config: [true, true, false,
+                        false, false, true,
+                        false , false, false,
+                        false, false, false,
+                        false, false, false]
+            odom0_differential: false
+
+            #odom1: RTK GNSS Position
+            odom1: odom1
+            odom1_config: [true, true, true,
+                        false, false, true,
+                        false , false, false,
+                        false, false, false,
+                        false, false, false]
+            odom1_differential: false
+        
+        
