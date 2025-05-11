@@ -11,7 +11,7 @@ from launch.conditions import IfCondition
 
 robot_name="zx200"
 use_autostart=True
-use_sim_time=False
+use_sim_time=True
 use_respawn=True
 use_namespace=True
 use_rviz=True
@@ -21,9 +21,9 @@ def generate_launch_description():
     zx200_navigation_dir=get_package_share_directory('zx200_navigation')
     zx200_unity_dir = get_package_share_directory("zx200_unity")
 
-    rviz_file = os.path.join(zx200_unity_dir, "rviz2", "zx200_standby.rviz")
+    rviz_file = os.path.join(zx200_unity_dir, "rviz2", "zx200_standby_sim.rviz")
 
-    navigation_parameters_yaml_file = os.path.join(zx200_navigation_dir, 'params', 'navigation_parameters.yaml')
+    navigation_parameters_yaml_file = os.path.join(zx200_navigation_dir, 'params', 'navigation_parameters_sim.yaml')
 
     map_yaml_file=LaunchConfiguration('map', default=os.path.join(zx200_navigation_dir, 'map', 'map.yaml'))
 

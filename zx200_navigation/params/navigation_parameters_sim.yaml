@@ -204,7 +204,7 @@ local_costmap:
       always_send_full_costmap: True
       use_sim_time: False
       footprint_padding: 0.5
-      global_frame: map
+      global_frame: odom
       height: 20
       width: 20
       observation_sources: scan
@@ -376,7 +376,7 @@ behavior_server:
       plugin: "nav2_behaviors/Wait"
     assisted_teleop:
       plugin: "nav2_behaviors/AssistedTeleop"
-    local_frame: base_link
+    local_frame: odom
     global_frame: map
     robot_base_frame: base_link
     transform_tolerance: 0.1

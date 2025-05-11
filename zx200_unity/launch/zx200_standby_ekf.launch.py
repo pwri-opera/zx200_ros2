@@ -28,7 +28,7 @@ opaque_function_complete_event = Event()
 def load_params(context, **kwargs):
     global configured_params, zx200_ekf_yaml_file
     zx200_navigation_dir = get_package_share_directory('zx200_navigation')
-    navigation_parameters_yaml_file = os.path.join(zx200_navigation_dir, 'params', 'navigation_parameters.yaml')
+    navigation_parameters_yaml_file = os.path.join(zx200_navigation_dir, 'params', 'navigation_parameters_sim.yaml')
     zx200_ekf_yaml_file = LaunchConfiguration('ekf_yaml_file', default=os.path.join(zx200_navigation_dir, 'config', 'zx200_ekf.yaml'))
 
     map_yaml_file = LaunchConfiguration('map', default=os.path.join(zx200_navigation_dir, 'map', 'map.yaml'))
@@ -46,7 +46,7 @@ def load_params(context, **kwargs):
 def generate_nodes(context, *args, **kwargs):
     opaque_function_complete_event.wait()
     zx200_unity_dir = get_package_share_directory("zx200_unity")
-    zx200_standby_rviz_file = os.path.join(zx200_unity_dir, "rviz2", "zx200_standby.rviz")
+    zx200_standby_rviz_file = os.path.join(zx200_unity_dir, "rviz2", "zx200_standby_sim.rviz")
     zx200_description_dir = get_package_share_directory("zx200_description")
 
     zx200_xacro_file = os.path.join(zx200_description_dir, "urdf", "zx200.xacro")

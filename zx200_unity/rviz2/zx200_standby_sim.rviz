@@ -8,8 +8,8 @@ Panels:
         - /Status1
         - /Grid1
         - /RobotModel1
-        - /RobotModel1/Description Topic1
         - /TF1
+        - /TF1/Status1
         - /TF1/Frames1
         - /TF1/Tree1
         - /Map1
@@ -20,6 +20,7 @@ Panels:
         - /Map2
         - /Map2/Topic1
         - /Path1
+        - /Path1/Status1
         - /Path2
         - /Path2/Offset1
         - /MarkerArray1
@@ -80,7 +81,7 @@ Visualization Manager:
         Durability Policy: Volatile
         History Policy: Keep Last
         Reliability Policy: Reliable
-        Value: /robot_description
+        Value: /zx200/robot_description
       Enabled: true
       Links:
         All Links Enabled: true
@@ -167,7 +168,21 @@ Visualization Manager:
           Value: true
         bucket_link:
           Value: true
+        ic120_tf/base_link:
+          Value: true
+        ic120_tf/body_link:
+          Value: true
+        ic120_tf/cylinder_head_link:
+          Value: true
+        ic120_tf/cylinder_rod_link:
+          Value: true
+        ic120_tf/odom:
+          Value: true
+        ic120_tf/vessel_pin_link:
+          Value: true
         map:
+          Value: true
+        odom:
           Value: true
         track_link:
           Value: true
@@ -181,14 +196,23 @@ Visualization Manager:
       Tree:
         world:
           map:
-            base_link:
-              track_link:
-                body_link:
-                  boom_link:
-                    arm_link:
-                      bucket_link:
-                        bucket_end_link:
-                          {}
+            ic120_tf/odom:
+              ic120_tf/base_link:
+                ic120_tf/body_link:
+                  ic120_tf/cylinder_head_link:
+                    ic120_tf/cylinder_rod_link:
+                      {}
+                  ic120_tf/vessel_pin_link:
+                    {}
+            odom:
+              base_link:
+                track_link:
+                  body_link:
+                    boom_link:
+                      arm_link:
+                        bucket_link:
+                          bucket_end_link:
+                            {}
       Update Interval: 0
       Value: true
     - Alpha: 0.699999988079071
@@ -356,10 +380,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.32520386576652527
+      Pitch: 0.16520394384860992
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz2)
-      Yaw: 0.673599362373352
+      Yaw: 0.9635990858078003
     Saved: ~
 Window Geometry:
   Displays:
