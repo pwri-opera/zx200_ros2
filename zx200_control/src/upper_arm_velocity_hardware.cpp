@@ -21,7 +21,7 @@ hardware_interface::CallbackReturn Zx200UpperArmVelocityHardware::on_init(const 
 
   // TODO: Fix topic name
   imu_js_sub_ = node_->create_subscription<sensor_msgs::msg::JointState>(
-      "/zx200/joint_state", 100, [this](sensor_msgs::msg::JointState msg) { imu_js_callback(msg); });
+      "/zx200/joint_states", 100, [this](sensor_msgs::msg::JointState msg) { imu_js_callback(msg); });
 
   joint_cmd_pub_ = node_->create_publisher<com3_msgs::msg::JointCmd>("/zx200/front_cmd", 100);
 
