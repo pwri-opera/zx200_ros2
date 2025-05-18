@@ -32,9 +32,15 @@ def load_params(context, **kwargs):
     zx200_ekf_yaml_file = LaunchConfiguration('ekf_yaml_file', default=os.path.join(zx200_navigation_dir, 'config', 'zx200_ekf.yaml'))
 
     map_yaml_file = LaunchConfiguration('map', default=os.path.join(zx200_navigation_dir, 'map', 'map.yaml'))
+    
     param_substitutions = {
         'use_sim_time': str(use_sim_time),
-        'yaml_filename': map_yaml_file}
+        'yaml_filename': map_yaml_file,
+        
+         # bt_navigator
+        'bt_navigator.ros__parameters.default_nav_to_pose_bt_xml': os.path.join(zx200_navigation_dir, 'params', 'zx200_navigate_to_pose_w_replanning_and_recovery.xml'),
+        'bt_navigator.ros__parameters.default_nav_through_poses_bt_xml': os.path.join(zx200_navigation_dir, 'params', 'zx200_navigate_through_poses_w_replanning_and_recovery.xml'),
+    }
     
     configured_params = RewrittenYaml(
             source_file=navigation_parameters_yaml_file,

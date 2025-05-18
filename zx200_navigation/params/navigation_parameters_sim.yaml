@@ -50,8 +50,13 @@ bt_navigator:
     use_sim_time: False
     robot_base_frame: base_link
     odom_topic: odom
-    default_nav_through_poses_bt_xml: "/home/common/SIP_PROJECTS/M2/SIMIZU_PROJECT/ros2_ws/install/zx200_navigation/share/zx200_navigation/config/zx200_navigate_through_poses_w_replanning_and_recovery.xml"
-    default_nav_through_poses_bt_xml: ""
+    
+    # Defined parameter values such as default_nav_to_pose_bt_xml, default_nav_to_pose_bt_xml and default_nav_through_poses_bt_xml are dummy. 
+    # Real parameters are defined in launch.py file.
+    default_nav_to_pose_bt_xml: "/zx200_navigation/params/zx200_navigate_to_pose_w_replanning_and_recovery.xml"
+    # default_nav_to_pose_bt_xml: "/zx200_navigation/params/zx200_navigate_to_pose_w_replanning_goal_patience_and_recovery.xml"
+    default_nav_through_poses_bt_xml: "/zx200_navigation/params/zx200_navigate_through_poses_w_replanning_and_recovery.xml"
+    
     bt_loop_duration: 10
     default_server_timeout: 20
     wait_for_service_timeout: 1000

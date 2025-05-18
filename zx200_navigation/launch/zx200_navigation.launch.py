@@ -21,9 +21,12 @@ def generate_launch_description():
     zx200_navigation_dir=get_package_share_directory('zx200_navigation')
     zx200_unity_dir = get_package_share_directory("zx200_unity")
 
+
     rviz_file = os.path.join(zx200_unity_dir, "rviz2", "zx200_standby.rviz")
 
     navigation_parameters_yaml_file = os.path.join(zx200_navigation_dir, 'params', 'navigation_parameters.yaml')
+
+    
 
     map_yaml_file=LaunchConfiguration('map', default=os.path.join(zx200_navigation_dir, 'map', 'map.yaml'))
 
@@ -41,7 +44,12 @@ def generate_launch_description():
     
     param_substitutions = {
         'use_sim_time': str(use_sim_time),
-        'yaml_filename': map_yaml_file}
+        'yaml_filename': map_yaml_file,
+        
+         # bt_navigator
+        'bt_navigator.ros__parameters.default_nav_to_pose_bt_xml': os.path.join(zx200_navigation_dir, 'params', 'zx200_navigate_to_pose_w_replanning_and_recovery.xml'),
+        'bt_navigator.ros__parameters.default_nav_through_poses_bt_xml': os.path.join(zx200_navigation_dir, 'params', 'zx200_navigate_through_poses_w_replanning_and_recovery.xml'),
+    }
     
     configured_params = RewrittenYaml(
             source_file=navigation_parameters_yaml_file,
