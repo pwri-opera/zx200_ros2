@@ -45,64 +45,43 @@ def generate_launch_description():
                            '--frame-id', 'world',
                            '--child-frame-id', 'map']
             ),
-            # Node(
-            #     package='zx200_navigation',
-            #     executable='odom_broadcaster',
-            #     name='odom_broadcaster',
-            #     output="screen",
-            #     parameters=[{'odom_topic': 'odom'},
-            #                 {'odom_frame': 'odom'},
-            #                 {'base_link_frame': 'base_link'}]
-            # ),            
+            Node(
+                package='zx200_navigation',
+                executable='odom_broadcaster',
+                name='odom_broadcaster',
+                output="screen",
+                parameters=[{'odom_topic': 'odom_pose'},
+                            {'odom_frame': 'odom'},
+                            {'base_link_frame': 'base_link'}]
+            ),            
             Node(
                 package='zx200_navigation',
                 executable='poseStamped2Odometry',
                 name='poseStamped2ground_truth_odom',
                 output="screen",
-                parameters=[{'odom_header_frame': "map",
+                parameters=[{'odom_header_frame': "world",
                                 'odom_child_frame': "base_link",
-                                'poseStamped_topic_name': "pose",
+                                'poseStamped_topic_name': "global_pose",
                                 'odom_topic_name': "gnss_odom"}]
-            ),             
+            ),                               
             Node(
-                package='zx200_navigation',
-                executable='map_to_baselink_tf_broadcaster',
-                name='map_to_baselink_tf_broadcaster',
+                package='robot_state_publisher',
+                executable='robot_state_publisher',
                 output="screen",
-                parameters=[{'map_to_baselink_topic': "gnss_odom",
-                                'frame_id': "map",
-                                'chid_frame_id': "base_link"}]
-            ),                 
-            # Node(
-            #     package='robot_state_publisher',
-            #     executable='robot_state_publisher',
-            #     output="screen",
-            #     parameters=[params, {'use_sim_time': True}],
-            # ), 
-            # Node(
-            #     package='zx200_navigation',
-            #     executable='fixed_odom_publisher',
-            #     output="screen",
-            #     parameters=[params, {'use_sim_time': True}],
-            # ),
+                parameters=[params],
+            ), 
             Node(
-                package = 'zx200_navigation',
-                executable = 'fixed_jointstates_publisher',
-                output = 'screen'
-            ),                        
-            # Node(
-            #     package='robot_localization',
-            #     executable='ekf_node',
-            #     name='ekf_global',
-            #     output="screen",
-            #     remappings=[('odometry/filtered','odometry/global'),
-            #                 ('odom0','odom_pose'),
-            #                 ('odom1','gnss_odom')], 
-            #     parameters=[zx200_ekf_yaml_file,
-            #                                 {
-            #                                 'odom0' : 'fixed_odom',
-            #                                 'odom1' : 'tracking/ground_truth',
-            #                                 }]
-            # ),
+                package='robot_localization',
+                executable='ekf_node',
+                name='ekf_global',
+                output="screen",
+                remappings=[('odometry/filtered','odometry/global')],
+                parameters=[zx200_ekf_yaml_file,
+                                            {
+                                            'use_sim_time' : False, 
+                                            'odom0' : 'odom_pose',
+                                            'odom1' : 'gnss_odom',
+                                            }]
+            ),
         ])
     ])

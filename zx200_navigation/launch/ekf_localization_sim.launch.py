@@ -87,9 +87,7 @@ def generate_launch_description():
                 executable='ekf_node',
                 name='ekf_global',
                 output="screen",
-                remappings=[('odometry/filtered','odometry/global'),
-                            ('odom0','odom_pose'),
-                            ('odom1','gnss_odom')], 
+                remappings=[('odometry/filtered','odometry/global')], 
                 parameters=[zx200_ekf_yaml_file,
                                             {
                                             'odom0' : 'fixed_odom',

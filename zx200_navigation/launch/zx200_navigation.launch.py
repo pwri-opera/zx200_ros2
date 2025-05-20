@@ -107,7 +107,8 @@ def generate_launch_description():
                 respawn=use_respawn,
                 respawn_delay=2.0,
                 parameters=[configured_params, {'use_sim_time': use_sim_time}],
-                remappings=[('cmd_vel', 'cmd_vel_nav')]
+                # remappings=[('cmd_vel', 'cmd_vel_nav')]
+                remappings=[('cmd_vel', 'cmd_vel_bef_smoothed')]
                 ),
             Node(
                 package='nav2_smoother',
@@ -135,7 +136,7 @@ def generate_launch_description():
                 respawn=use_respawn,
                 respawn_delay=2.0,
                 parameters=[configured_params, {'use_sim_time': use_sim_time}],
-                remappings= [('cmd_vel', 'tracks/cmd_vel')]
+                # remappings= [('cmd_vel', 'tracks/cmd_vel')]
             ),
             Node(
                 package='nav2_bt_navigator',
@@ -164,8 +165,8 @@ def generate_launch_description():
                 respawn_delay=2.0,
                 parameters=[configured_params, {'use_sim_time': use_sim_time}],
                 remappings=[
-                        ('cmd_vel', 'cmd_vel_nav'), 
-                         ('cmd_vel_smoothed', 'tracks/cmd_vel')]
+                        ('cmd_vel', 'cmd_vel_bef_smoothed'), 
+                         ('cmd_vel_smoothed', 'cmd_vel')]
             ),
             Node(
                 package='nav2_lifecycle_manager',

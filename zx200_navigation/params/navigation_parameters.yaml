@@ -50,12 +50,13 @@ bt_navigator:
     use_sim_time: False
     robot_base_frame: base_link
     odom_topic: odom
+    
     # Defined parameter values such as default_nav_to_pose_bt_xml, default_nav_to_pose_bt_xml and default_nav_through_poses_bt_xml are dummy. 
     # Real parameters are defined in launch.py file.
     default_nav_to_pose_bt_xml: "/zx200_navigation/params/zx200_navigate_to_pose_w_replanning_and_recovery.xml"
     # default_nav_to_pose_bt_xml: "/zx200_navigation/params/zx200_navigate_to_pose_w_replanning_goal_patience_and_recovery.xml"
     default_nav_through_poses_bt_xml: "/zx200_navigation/params/zx200_navigate_through_poses_w_replanning_and_recovery.xml"
-  
+    
     bt_loop_duration: 10
     default_server_timeout: 20
     wait_for_service_timeout: 1000
@@ -140,7 +141,7 @@ controller_server:
     progress_checker_plugins: ["progress_checker"]
     goal_checker_plugins: ["general_goal_checker"] # "precise_goal_checker"
     controller_plugins: ["FollowPath"]
-    odom_topic: "/zx200/odom"
+    odom_topic: "/zx200/odom_pose"
 
     # Progress checker parameters
     progress_checker:
@@ -156,8 +157,8 @@ controller_server:
     general_goal_checker:
       stateful: True
       plugin: "nav2_controller::SimpleGoalChecker"
-      xy_goal_tolerance: 1.5
-      yaw_goal_tolerance: 0.5
+      xy_goal_tolerance: 0.3
+      yaw_goal_tolerance: 0.125
     # DWB parameters
     FollowPath:
       plugin: "dwb_core::DWBLocalPlanner"
@@ -184,7 +185,7 @@ controller_server:
       sim_time: 1.7
       linear_granularity: 0.05
       angular_granularity: 0.025
-      transform_tolerance: 0.2
+      transform_tolerance: 1.0
       xy_goal_tolerance: 0.25
       trans_stopped_velocity: 0.25
       short_circuit_trajectory_evaluation: True
@@ -208,7 +209,7 @@ local_costmap:
       always_send_full_costmap: True
       use_sim_time: False
       footprint_padding: 0.5
-      global_frame: map
+      global_frame: odom
       height: 20
       width: 20
       observation_sources: scan
@@ -216,7 +217,7 @@ local_costmap:
       resolution: 0.05
       robot_base_frame: base_link
       rolling_window: true
-      transform_tolerance: 0.25
+      transform_tolerance: 1.0
       update_frequency: 10.0
       plugins: ["static_layer", "inflation_layer"]
       
@@ -288,7 +289,7 @@ global_costmap:
       resolution: 0.1
       robot_base_frame: base_link
       rolling_window: false
-      transform_tolerance: 0.25
+      transform_tolerance: 1.0
       update_frequency: 10.0
       plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
       
@@ -380,10 +381,10 @@ behavior_server:
       plugin: "nav2_behaviors/Wait"
     assisted_teleop:
       plugin: "nav2_behaviors/AssistedTeleop"
-    local_frame: base_link
+    local_frame: odom
     global_frame: map
     robot_base_frame: base_link
-    transform_tolerance: 0.1
+    transform_tolerance: 1.0
     simulate_ahead_time: 2.0
     max_rotational_vel: 3.0
     min_rotational_vel: -3.0
@@ -415,7 +416,7 @@ velocity_smoother:
     min_velocity: [-1.0, 0.0, -3.0]
     max_accel: [2.5, 0.0, 3.2]
     max_decel: [-2.5, 0.0, -3.2]
-    odom_topic: /zx200/odom
+    odom_topic: /zx200/odom_pose
     odom_duration: 0.1
     deadband_velocity: [0.0, 0.0, 0.0]
     velocity_timeout: 1.0
