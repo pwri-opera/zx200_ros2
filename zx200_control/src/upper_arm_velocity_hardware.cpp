@@ -151,7 +151,7 @@ Zx200UpperArmVelocityHardware::on_deactivate(const rclcpp_lifecycle::State& /*pr
 hardware_interface::return_type Zx200UpperArmVelocityHardware::read(const rclcpp::Time& /*time*/,
                                                                     const rclcpp::Duration& /*period*/)
 {
-  for (int i = 0; i < latest_joint_states_.name.size(); i++)
+  for (size_t i = 0; i < latest_joint_states_.name.size(); i++)
   {
     position_states_[i] = latest_joint_states_.position[i];
     velocity_states_[i] = latest_joint_states_.velocity[i];
