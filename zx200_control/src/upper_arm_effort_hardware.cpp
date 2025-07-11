@@ -178,7 +178,7 @@ Zx200UpperArmEffortHardware::on_deactivate(const rclcpp_lifecycle::State& /*prev
 hardware_interface::return_type Zx200UpperArmEffortHardware::read(const rclcpp::Time& /*time*/,
                                                                   const rclcpp::Duration& /*period*/)
 {
-  for (int i = 0; i < latest_joint_states_.name.size(); i++)
+  for (size_t i = 0; i < latest_joint_states_.name.size(); i++)
   {
     position_states_[i] = latest_joint_states_.position[i];
     velocity_states_[i] = latest_joint_states_.velocity[i];
