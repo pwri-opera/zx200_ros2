@@ -44,6 +44,46 @@ hardware_interface::CallbackReturn Zx200UpperArmVelocityHardware::on_init(const 
 
   position_states_.resize(info_.joints.size(), 0);
   velocity_states_.resize(info_.joints.size(), 0);
+
+  // get initial joint position and velocity from the hardware interface
+  for (uint i = 0; i < info_.joints.size(); i++)
+  {
+    std::string joint_name = info_.joints[i].name;
+
+    auto get_initial_value =
+    [this, joint_name](const hardware_interface::InterfaceInfo & interface_info) {
+      double initial_value{0.0};
+      if (!interface_info.initial_value.empty()) {
+        try {
+          initial_value = std::stod(interface_info.initial_value);
+          RCLCPP_INFO(node_->get_logger(), "\t\t\t found initial value: %f", initial_value);
+        } catch (std::invalid_argument &) {
+          RCLCPP_ERROR_STREAM(
+            node_->get_logger(),
+            "Failed converting initial_value string to real number for the joint "
+              << joint_name
+              << " and state interface " << interface_info.name
+              << ". Actual value of parameter: " << interface_info.initial_value
+              << ". Initial value will be set to 0.0");
+          throw std::invalid_argument("Failed converting initial_value string");
+        }
+      }
+      return initial_value;
+    };
+  
+    for (const hardware_interface::InterfaceInfo & interface_info : info_.joints[i].state_interfaces)
+    {
+      if (interface_info.name == hardware_interface::HW_IF_POSITION)
+      {
+        position_states_[i] = latest_joint_states_.position[i] = get_initial_value(interface_info);
+      }
+      else if (interface_info.name == hardware_interface::HW_IF_VELOCITY)
+      {
+        velocity_states_[i] = latest_joint_states_.velocity[i] = get_initial_value(interface_info);
+      }
+    }
+  }
+
   // old_position_states_.resize(info_.joints.size(), 0);
   // predicted_positions_.resize(info_.joints.size(), 0);
 
@@ -156,7 +196,6 @@ hardware_interface::return_type Zx200UpperArmVelocityHardware::read(const rclcpp
     position_states_[i] = latest_joint_states_.position[i];
     velocity_states_[i] = latest_joint_states_.velocity[i];
   }
-
   return hardware_interface::return_type::OK;
 }
 
