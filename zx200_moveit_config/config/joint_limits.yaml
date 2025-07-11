@@ -10,14 +10,14 @@ default_acceleration_scaling_factor: 1.0
 joint_limits:
   arm_joint:
     has_velocity_limits: true
-    max_velocity: 6.159937255
+    max_velocity: 0.7
     has_acceleration_limits: false
     max_acceleration: 0
   boom_joint:
     has_velocity_limits: true
-    max_velocity: 6.159937255
+    max_velocity: 0.3
     has_acceleration_limits: true
-    max_acceleration: 0.4
+    max_acceleration: 0.2
   bucket_end_joint:
     has_velocity_limits: true
     max_velocity: 0.5
@@ -25,11 +25,11 @@ joint_limits:
     max_acceleration: 0
   bucket_joint:
     has_velocity_limits: true
-    max_velocity: 6.159937255
+    max_velocity: 1.0
     has_acceleration_limits: true
-    max_acceleration: 0.5
+    max_acceleration: 1.0
   swing_joint:
     has_velocity_limits: true
-    max_velocity: 6.159937255
+    max_velocity: 1.0
     has_acceleration_limits: true
-    max_acceleration: 0.5
+    max_acceleration: 1.0

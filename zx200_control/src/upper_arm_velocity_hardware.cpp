@@ -21,7 +21,7 @@ hardware_interface::CallbackReturn Zx200UpperArmVelocityHardware::on_init(const 
 
   // TODO: Fix topic name
   imu_js_sub_ = node_->create_subscription<sensor_msgs::msg::JointState>(
-      "/zx200/joint_state", 100, [this](sensor_msgs::msg::JointState msg) { imu_js_callback(msg); });
+      "/zx200/joint_states", 100, [this](sensor_msgs::msg::JointState msg) { imu_js_callback(msg); });
 
   joint_cmd_pub_ = node_->create_publisher<com3_msgs::msg::JointCmd>("/zx200/front_cmd", 100);
 
@@ -191,7 +191,7 @@ Zx200UpperArmVelocityHardware::on_deactivate(const rclcpp_lifecycle::State& /*pr
 hardware_interface::return_type Zx200UpperArmVelocityHardware::read(const rclcpp::Time& /*time*/,
                                                                     const rclcpp::Duration& /*period*/)
 {
-  for (uint i = 0; i < latest_joint_states_.name.size(); i++)
+  for (size_t i = 0; i < latest_joint_states_.name.size(); i++)
   {
     position_states_[i] = latest_joint_states_.position[i];
     velocity_states_[i] = latest_joint_states_.velocity[i];

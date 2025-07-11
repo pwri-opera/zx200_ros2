@@ -12,6 +12,24 @@
   <!--	
   <depend>move_base</depend>
   -->
+
+  <depend>tf2_ros</depend>
+  <depend>rviz2</depend>
+  <depend>joint_state_publisher</depend>
+  <depend>robot_state_publisher</depend>
+  <depend>rclcpp_components</depend>
+  <depend>nav2_map_server</depend>
+  <depend>nav2_lifecycle_manager</depend>
+  <depend>nav2_controller</depend>
+  <depend>nav2_smoother</depend>
+  <depend>nav2_planner</depend>
+  <depend>nav2_behaviors</depend>
+  <depend>nav2_bt_navigator</depend>
+  <depend>nav2_waypoint_follower</depend>
+  <depend>nav2_velocity_smoother</depend>
+  <depend>robot_localization</depend>
+  <depend>nav2_amcl</depend>
+  
   <export>
     <build_type>ament_cmake</build_type>
   </export>
