@@ -28,7 +28,7 @@ zx200:
                         false , false, false,
                         false, false, false,
                         false, false, false]
-            odom0_differential: false
+            odom0_differential: true
 
             #odom1: RTK GNSS Position
             odom1: odom1
