@@ -1,4 +1,5 @@
 #include <cstdio>
+#include <limits>
 
 #include "zx200_control/upper_arm_unity_hardware.hpp"
 #include "hardware_interface/types/hardware_interface_type_values.hpp"
@@ -19,46 +20,40 @@ Zx200UpperArmPositionUnityHardware::on_init(const hardware_interface::HardwareIn
   }
 
   node_ = rclcpp::Node::make_shared("upper_arm_unity_hw");
-  // joint_state_pub_ = node_->create_publisher<sensor_msgs::msg::JointState>("/test/joint_states", 100);
-  swing_cmd_pub_ = node_->create_publisher<std_msgs::msg::Float64>("/zx200/swing/cmd", 100);
-  boom_cmd_pub_ = node_->create_publisher<std_msgs::msg::Float64>("/zx200/boom/cmd", 100);
-  arm_cmd_pub_ = node_->create_publisher<std_msgs::msg::Float64>("/zx200/arm/cmd", 100);
-  bucket_cmd_pub_ = node_->create_publisher<std_msgs::msg::Float64>("/zx200/bucket/cmd", 100);
+  js_sub_ = node_->create_subscription<sensor_msgs::msg::JointState>(
+      "/zx200/joint_states", 100, [this](sensor_msgs::msg::JointState msg) {js_callback(msg); });
+
+  joint_cmd_pub_ = node_->create_publisher<com3_msgs::msg::JointCmd>("/zx200/front_cmd", 100);
 
   node_thread_ = std::thread([this]() { rclcpp::spin(node_); });
-  // joint_state_msg_.header.frame_id = "joint-state data";
-  // joint_state_msg_.name.resize(info_.joints.size());
-  // joint_state_msg_.position.resize(info_.joints.size(), 0);
-  // joint_state_msg_.velocity.resize(info_.joints.size(), 0);
-  // joint_state_msg_.effort.resize(info_.joints.size(), 0);
-  // for (int i = 0; i < (int)info_.joints.size(); i++)
-  // {
-  //   joint_state_msg_.name[i] = info_.joints[i].name;
-  // }
-  //
-  // for (int i = 0; i < info_.joints.size();i++){
 
-  // }
-  // double init_pos;
-  // hardware_interface
-  // node_->get_parameter("/move_group/robot_description");
-  // position_cmds_.resize(info_.joints.size(), 0);
+  joint_cmd_msg_.joint_name.resize(info_.joints.size());
+  latest_joint_states_.name.resize(info_.joints.size());
 
-  hw_states_.resize(info_.joints.size(), 0);
-  hw_commands_.resize(info_.joints.size(), 0);
+  for (int i = 0; i < (int)info_.joints.size(); i++)
+  {
+    joint_cmd_msg_.joint_name[i] = info_.joints[i].name;
+    latest_joint_states_.name[i] = info_.joints[i].name;
+  }
 
-  // input initial pose here
-  // not for real robot
-  // should get from init file
-  hw_commands_[0] = 0;
-  hw_commands_[1] = 0;
-  hw_commands_[2] = 1;
-  hw_commands_[3] = 0;
-  hw_commands_[4] = 0;
+  joint_cmd_msg_.position.resize(info_.joints.size(), 0);
+  joint_cmd_msg_.velocity.resize(info_.joints.size(), 0);
+  joint_cmd_msg_.effort.resize(info_.joints.size(), 0);
+
+  latest_joint_states_.position.resize(info_.joints.size(), 0);
+  latest_joint_states_.velocity.resize(info_.joints.size(), 0);
+  latest_joint_states_.effort.resize(info_.joints.size(), 0);
+
+  position_states_.resize(info_.joints.size(), 0);
+  velocity_states_.resize(info_.joints.size(), 0);
+  effort_commands_.resize(info_.joints.size(), 0);
+
+  /* input initial pose here not for real robot should get from init file */
+  latest_joint_states_.position[2] = 1;
 
   for (const hardware_interface::ComponentInfo& joint : info_.joints)
   {
-    // Zx200UpperArmPositionUnityHardware has exactly one state and command interface on each joint
+    // Exactly one command interface on each joint
     if (joint.command_interfaces.size() != 1)
     {
       RCLCPP_FATAL(rclcpp::get_logger("Zx200UpperArmPositionUnityHardware"),
@@ -109,8 +104,8 @@ std::vector<hardware_interface::StateInterface> Zx200UpperArmPositionUnityHardwa
   std::vector<hardware_interface::StateInterface> state_interfaces;
   for (uint i = 0; i < info_.joints.size(); i++)
   {
-    state_interfaces.emplace_back(
-        hardware_interface::StateInterface(info_.joints[i].name, hardware_interface::HW_IF_POSITION, &hw_states_[i]));
+    state_interfaces.emplace_back(hardware_interface::StateInterface(
+        info_.joints[i].name, hardware_interface::HW_IF_POSITION, &position_states_[i]));
   }
 
   return state_interfaces;
@@ -121,7 +116,11 @@ std::vector<hardware_interface::CommandInterface> Zx200UpperArmPositionUnityHard
   for (uint i = 0; i < info_.joints.size(); i++)
   {
     command_interfaces.emplace_back(hardware_interface::CommandInterface(
-        info_.joints[i].name, hardware_interface::HW_IF_POSITION, &hw_commands_[i]));
+          info_.joints[i].name, hardware_interface::HW_IF_POSITION, &position_states_[i]));
+    // command_interfaces.emplace_back(hardware_interface::CommandInterface(
+    //       info_.joints[i].name, hardware_interface::HW_IF_VELOCITY, &velocity_states_[i]));
+    // command_interfaces.emplace_back(hardware_interface::CommandInterface(
+    //     info_.joints[i].name, hardware_interface::HW_IF_EFFORT, &effort_states_[i]));
   }
 
   return command_interfaces;
@@ -143,16 +142,12 @@ Zx200UpperArmPositionUnityHardware::on_deactivate(const rclcpp_lifecycle::State&
 hardware_interface::return_type Zx200UpperArmPositionUnityHardware::read(const rclcpp::Time& /*time*/,
                                                                          const rclcpp::Duration& /*period*/)
 {
-  // joint_state_msg_.header.stamp = node_->get_clock()->now();
-  // joint_state_pub_->publish(joint_state_msg_);
-  angle_cmd_.data = hw_commands_[0];
-  swing_cmd_pub_->publish(angle_cmd_);
-  angle_cmd_.data = hw_commands_[1];
-  boom_cmd_pub_->publish(angle_cmd_);
-  angle_cmd_.data = hw_commands_[2];
-  arm_cmd_pub_->publish(angle_cmd_);
-  angle_cmd_.data = hw_commands_[3];
-  bucket_cmd_pub_->publish(angle_cmd_);
+  for (size_t i = 0; i < latest_joint_states_.name.size(); i++)
+  {
+    position_states_[i] = latest_joint_states_.position[i];
+    velocity_states_[i] = latest_joint_states_.velocity[i];
+
+  }
 
   return hardware_interface::return_type::OK;
 }
@@ -160,14 +155,17 @@ hardware_interface::return_type Zx200UpperArmPositionUnityHardware::read(const r
 hardware_interface::return_type Zx200UpperArmPositionUnityHardware::write(const rclcpp::Time& /*time*/,
                                                                           const rclcpp::Duration& /*period*/)
 {
-  for (int i = 0; i < (int)hw_commands_.size(); i++)
-  {
-    hw_states_[i] = hw_commands_[i];
-    // joint_state_msg_.position[i] = hw_commands_[i];
-  }
+  joint_cmd_msg_.effort = effort_commands_;
+  joint_cmd_pub_->publish(joint_cmd_msg_);
 
   return hardware_interface::return_type::OK;
 }
+
+void Zx200UpperArmPositionUnityHardware::js_callback(const sensor_msgs::msg::JointState& msg)
+{
+  latest_joint_states_ = msg;
+}
+
 }  // namespace zx200_control
 
 #include "pluginlib/class_list_macros.hpp"
