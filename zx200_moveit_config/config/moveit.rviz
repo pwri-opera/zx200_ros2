@@ -39,7 +39,7 @@ Visualization Manager:
     - Acceleration_Scaling_Factor: 1
       Class: moveit_rviz_plugin/MotionPlanning
       Enabled: true
-      Move Group Namespace: ""
+      Move Group Namespace: "/zx200"
       MoveIt_Allow_Approximate_IK: true
       MoveIt_Allow_External_Program: false
       MoveIt_Allow_Replanning: false

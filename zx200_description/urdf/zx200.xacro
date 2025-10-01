@@ -75,7 +75,7 @@
 		<axis xyz="0 1 0"/>
 		<parent link="body_link"/>
 		<child link="boom_link"/>
-		<limit lower="-1.137" upper="${radians(20)}" effort="500" velocity="6.159937255"/>
+		<limit lower="-1.137" upper="-0.1" effort="500" velocity="6.159937255"/>
 	</joint>
 
 

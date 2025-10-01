@@ -1,33 +1,34 @@
 # This config file is used by ros2_control
-controller_manager:
-  ros__parameters:
-    update_rate: 100  # Hz
+/**:
+  controller_manager:
+    ros__parameters:
+      update_rate: 100  # Hz
 
-    upper_arm_controller: # original controller
-      # type: dt_compensated_joint_trajectory_controller/DTCompensatedJointTrajectoryController      
-      type: joint_trajectory_controller/JointTrajectoryController
+      upper_arm_controller: # original controller
+        # type: dt_compensated_joint_trajectory_controller/DTCompensatedJointTrajectoryController      
+        type: joint_trajectory_controller/JointTrajectoryController
 
-    joint_state_broadcaster:
-      type: joint_state_broadcaster/JointStateBroadcaster
+      joint_state_broadcaster:
+        type: joint_state_broadcaster/JointStateBroadcaster
 
-upper_arm_controller:
-  ros__parameters:
-    joints:
-      - swing_joint
-      - boom_joint
-      - arm_joint
-      - bucket_joint
-      - bucket_end_joint
-    command_interfaces:
-      - position
-      # - velocity
-      # - effort
-    state_interfaces:
-      - position
-      # - velocity
-    # gains: # TODO: Fix for zx200
-    #   swing_joint: {p: 0.0, i: 0.0, d: 0.0}
-    #   boom_joint: {p: 0.0, i: 0.0, d: 0.0}
-    #   arm_joint: {p: 0.0, i: 0.0, d: 0.0}
-    #   bucket_joint: {p: 0.0, i: 0.0, d: 0.0}
+  upper_arm_controller:
+    ros__parameters:
+      joints:
+        - swing_joint
+        - boom_joint
+        - arm_joint
+        - bucket_joint
+        - bucket_end_joint
+      command_interfaces:
+        - position
+        # - velocity
+        # - effort
+      state_interfaces:
+        - position
+        # - velocity
+      # gains: # TODO: Fix for zx200
+      #   swing_joint: {p: 0.0, i: 0.0, d: 0.0}
+      #   boom_joint: {p: 0.0, i: 0.0, d: 0.0}
+      #   arm_joint: {p: 0.0, i: 0.0, d: 0.0}
+      #   bucket_joint: {p: 0.0, i: 0.0, d: 0.0}
 

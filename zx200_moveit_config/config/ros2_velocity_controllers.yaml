@@ -1,57 +1,58 @@
 # This config file is used by ros2_control
-controller_manager:
-  ros__parameters:
-    update_rate: 100  # Hz
+/**:
+  controller_manager:
+    ros__parameters:
+      update_rate: 100  # Hz
 
-    upper_arm_controller: # original controller
-      # type: dt_compensated_joint_trajectory_controller/DTCompensatedJointTrajectoryController      
-      type: joint_trajectory_controller/JointTrajectoryController
+      upper_arm_controller: # original controller
+        # type: dt_compensated_joint_trajectory_controller/DTCompensatedJointTrajectoryController      
+        type: joint_trajectory_controller/JointTrajectoryController
 
-    joint_state_broadcaster:
-      type: joint_state_broadcaster/JointStateBroadcaster
+      joint_state_broadcaster:
+        type: joint_state_broadcaster/JointStateBroadcaster
 
-upper_arm_controller:
-  ros__parameters:
-    joints:
-      - swing_joint
-      - boom_joint
-      - arm_joint
-      - bucket_joint
-      - bucket_end_joint
-    command_interfaces:
-      # - position
-      - velocity
-      # - effort
-    state_interfaces:
-      - position
-      - velocity
-    state_publish_rate: 100.0  # Hz
-    # interpolation_method: "none"
-    gains: # TODO: Fix for zx200
-      # swing_joint: {p: 0.8, i: 0.0, d: 0.0, angle_wraparound: true}
-      # boom_joint: {p: 1.4, i: 0.0, d: 0.0}
-      # arm_joint: {p: 1.5, i: 0.0, d: 0.0}
-      # bucket_joint: {p: 1.0, i: 0.0, d: 0.0}
-      swing_joint: {p: 1.2,  i: 0.3, d: 0.0}
-      boom_joint: {p: 2.4, i: 0.3, d: 0.2}
-      arm_joint: {p: 2.5, i: 0.3, d: 0.2}
-      bucket_joint: {p: 2.0, i: 0.3, d: 0.2}
-    constraints:
-      goal_time: 60.0                   # Defaults to zero
-      # stopped_velocity_tolerance: 0.02 # Defaults to 0.01
-      swing_joint:
-        # trajectory: 0.05               # Defaults to zero (ie. the tolerance is not enforced)
-        goal:       0.03               # Defaults to zero (ie. the tolerance is not enforced)
-      boom_joint:
-        # trajectory: 0.05               # Defaults to zero (ie. the tolerance is not enforced)
-        goal:       0.03               # Defaults to zero (ie. the tolerance is not enforced)
-      arm_joint:
-        # trajectory: 0.05               # Defaults to zero (ie. the tolerance is not enforced)
-        goal:       0.03               # Defaults to zero (ie. the tolerance is not enforced)
-      bucket_joint:
-        # trajectory: 0.05               # Defaults to zero (ie. the tolerance is not enforced)
-        goal:       0.03               # Defaults to zero (ie. the tolerance is not enforced)
-      # bucket_end_joint:
-      #   # trajectory: 0.05               # Defaults to zero (ie. the tolerance is not enforced)
-      #   goal:       0.03               # Defaults to zero (ie. the tolerance is not enforced)
+  upper_arm_controller:
+    ros__parameters:
+      joints:
+        - swing_joint
+        - boom_joint
+        - arm_joint
+        - bucket_joint
+        - bucket_end_joint
+      command_interfaces:
+        # - position
+        - velocity
+        # - effort
+      state_interfaces:
+        - position
+        - velocity
+      state_publish_rate: 100.0  # Hz
+      # interpolation_method: "none"
+      gains: # TODO: Fix for zx200
+        # swing_joint: {p: 0.8, i: 0.0, d: 0.0, angle_wraparound: true}
+        # boom_joint: {p: 1.4, i: 0.0, d: 0.0}
+        # arm_joint: {p: 1.5, i: 0.0, d: 0.0}
+        # bucket_joint: {p: 1.0, i: 0.0, d: 0.0}
+        swing_joint: {p: 1.2,  i: 0.3, d: 0.0}
+        boom_joint: {p: 2.4, i: 0.3, d: 0.2}
+        arm_joint: {p: 2.5, i: 0.3, d: 0.2}
+        bucket_joint: {p: 2.0, i: 0.3, d: 0.2}
+      constraints:
+        goal_time: 60.0                   # Defaults to zero
+        # stopped_velocity_tolerance: 0.02 # Defaults to 0.01
+        swing_joint:
+          # trajectory: 0.05               # Defaults to zero (ie. the tolerance is not enforced)
+          goal:       0.03               # Defaults to zero (ie. the tolerance is not enforced)
+        boom_joint:
+          # trajectory: 0.05               # Defaults to zero (ie. the tolerance is not enforced)
+          goal:       0.03               # Defaults to zero (ie. the tolerance is not enforced)
+        arm_joint:
+          # trajectory: 0.05               # Defaults to zero (ie. the tolerance is not enforced)
+          goal:       0.03               # Defaults to zero (ie. the tolerance is not enforced)
+        bucket_joint:
+          # trajectory: 0.05               # Defaults to zero (ie. the tolerance is not enforced)
+          goal:       0.03               # Defaults to zero (ie. the tolerance is not enforced)
+        # bucket_end_joint:
+        #   # trajectory: 0.05               # Defaults to zero (ie. the tolerance is not enforced)
+        #   goal:       0.03               # Defaults to zero (ie. the tolerance is not enforced)
 
