@@ -36,21 +36,21 @@ def generate_launch_description():
                 package='tf2_ros',
                 executable='static_transform_publisher',
                 name='world_to_map',
-                arguments=['--x','21395.178', 
-                           '--y','14034.450', 
-                           '--z','28.552', 
-                           '--roll','0', 
-                           '--pitch','0', 
-                           '--yaw','0', 
-                           '--frame-id', 'world',
-                           '--child-frame-id', 'map']
+                arguments=['--x', '0', 
+                            '--y', '0', 
+                            '--z', '0', 
+                            '--roll', '0', 
+                            '--pitch', '0', 
+                            '--yaw', '0', 
+                            '--frame-id', 'world',
+                            '--child-frame-id', 'map']
             ),
             Node(
                 package='zx200_navigation',
                 executable='odom_broadcaster',
                 name='odom_broadcaster',
                 output="screen",
-                parameters=[{'odom_topic': 'odom_pose'},
+                parameters=[{'odom_topic': 'odom'},
                             {'odom_frame': 'odom'},
                             {'base_link_frame': 'base_link'}]
             ),            
@@ -59,28 +59,39 @@ def generate_launch_description():
                 executable='poseStamped2Odometry',
                 name='poseStamped2ground_truth_odom',
                 output="screen",
-                parameters=[{'odom_header_frame': "world",
+                parameters=[{'odom_header_frame': "map",
                                 'odom_child_frame': "base_link",
-                                'poseStamped_topic_name': "global_pose",
-                                'odom_topic_name': "gnss_odom"}]
-            ),                               
+                                'poseStamped_topic_name': "base_link/pose",
+                                'odom_topic_name': "tracking/ground_truth",
+                                'use_sim_time': True}]
+            ),             
             Node(
                 package='robot_state_publisher',
                 executable='robot_state_publisher',
                 output="screen",
-                parameters=[params],
+                parameters=[params, {'use_sim_time': True}],
             ), 
+            Node(
+                package='zx200_navigation',
+                executable='fixed_odom_publisher',
+                output="screen",
+                parameters=[params, {'use_sim_time': True}],
+            ),
+            Node(
+                package = 'zx200_navigation',
+                executable = 'fixed_jointstates_publisher',
+                output = 'screen'
+            ),                        
             Node(
                 package='robot_localization',
                 executable='ekf_node',
                 name='ekf_global',
                 output="screen",
-                remappings=[('odometry/filtered','odometry/global')],
+                remappings=[('odometry/filtered','odometry/global')], 
                 parameters=[zx200_ekf_yaml_file,
                                             {
-                                            'use_sim_time' : False, 
-                                            'odom0' : 'odom_pose',
-                                            'odom1' : 'gnss_odom',
+                                            'odom0' : 'fixed_odom',
+                                            'odom1' : 'tracking/ground_truth',
                                             }]
             ),
         ])

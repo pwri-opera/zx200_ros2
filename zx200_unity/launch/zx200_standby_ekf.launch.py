@@ -28,13 +28,19 @@ opaque_function_complete_event = Event()
 def load_params(context, **kwargs):
     global configured_params, zx200_ekf_yaml_file
     zx200_navigation_dir = get_package_share_directory('zx200_navigation')
-    navigation_parameters_yaml_file = os.path.join(zx200_navigation_dir, 'params', 'navigation_parameters.yaml')
+    navigation_parameters_yaml_file = os.path.join(zx200_navigation_dir, 'params', 'navigation_parameters_sim.yaml')
     zx200_ekf_yaml_file = LaunchConfiguration('ekf_yaml_file', default=os.path.join(zx200_navigation_dir, 'config', 'zx200_ekf.yaml'))
 
     map_yaml_file = LaunchConfiguration('map', default=os.path.join(zx200_navigation_dir, 'map', 'map.yaml'))
+    
     param_substitutions = {
         'use_sim_time': str(use_sim_time),
-        'yaml_filename': map_yaml_file}
+        'yaml_filename': map_yaml_file,
+        
+         # bt_navigator
+        'bt_navigator.ros__parameters.default_nav_to_pose_bt_xml': os.path.join(zx200_navigation_dir, 'params', 'zx200_navigate_to_pose_w_replanning_and_recovery.xml'),
+        'bt_navigator.ros__parameters.default_nav_through_poses_bt_xml': os.path.join(zx200_navigation_dir, 'params', 'zx200_navigate_through_poses_w_replanning_and_recovery.xml'),
+    }
     
     configured_params = RewrittenYaml(
             source_file=navigation_parameters_yaml_file,
@@ -46,7 +52,7 @@ def load_params(context, **kwargs):
 def generate_nodes(context, *args, **kwargs):
     opaque_function_complete_event.wait()
     zx200_unity_dir = get_package_share_directory("zx200_unity")
-    zx200_standby_rviz_file = os.path.join(zx200_unity_dir, "rviz2", "zx200_standby.rviz")
+    zx200_standby_rviz_file = os.path.join(zx200_unity_dir, "rviz2", "zx200_standby_sim.rviz")
     zx200_description_dir = get_package_share_directory("zx200_description")
 
     zx200_xacro_file = os.path.join(zx200_description_dir, "urdf", "zx200.xacro")
@@ -147,9 +153,7 @@ def generate_nodes(context, *args, **kwargs):
             executable='ekf_node',
             name='ekf_global',
             output="screen",
-            remappings=[('odometry/filtered','odometry/global'),
-                        ('odom0','odom_pose'),
-                        ('odom1','gnss_odom')], 
+            remappings=[('odometry/filtered','odometry/global')], 
             parameters=[zx200_ekf_yaml_file,
                                         {
                                         'odom0' : 'fixed_odom',

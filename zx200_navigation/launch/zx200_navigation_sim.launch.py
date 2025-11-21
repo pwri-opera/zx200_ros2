@@ -11,7 +11,7 @@ from launch.conditions import IfCondition
 
 robot_name="zx200"
 use_autostart=True
-use_sim_time=False
+use_sim_time=True
 use_respawn=True
 use_namespace=True
 use_rviz=True
@@ -21,12 +21,9 @@ def generate_launch_description():
     zx200_navigation_dir=get_package_share_directory('zx200_navigation')
     zx200_unity_dir = get_package_share_directory("zx200_unity")
 
+    rviz_file = os.path.join(zx200_unity_dir, "rviz2", "zx200_standby_sim.rviz")
 
-    rviz_file = os.path.join(zx200_unity_dir, "rviz2", "zx200_standby.rviz")
-
-    navigation_parameters_yaml_file = os.path.join(zx200_navigation_dir, 'params', 'navigation_parameters.yaml')
-
-    
+    navigation_parameters_yaml_file = os.path.join(zx200_navigation_dir, 'params', 'navigation_parameters_sim.yaml')
 
     map_yaml_file=LaunchConfiguration('map', default=os.path.join(zx200_navigation_dir, 'map', 'map.yaml'))
 
@@ -107,8 +104,7 @@ def generate_launch_description():
                 respawn=use_respawn,
                 respawn_delay=2.0,
                 parameters=[configured_params, {'use_sim_time': use_sim_time}],
-                # remappings=[('cmd_vel', 'cmd_vel_nav')]
-                remappings=[('cmd_vel', 'cmd_vel_bef_smoothed')]
+                remappings=[('cmd_vel', 'cmd_vel_nav')]
                 ),
             Node(
                 package='nav2_smoother',
@@ -136,7 +132,7 @@ def generate_launch_description():
                 respawn=use_respawn,
                 respawn_delay=2.0,
                 parameters=[configured_params, {'use_sim_time': use_sim_time}],
-                # remappings= [('cmd_vel', 'tracks/cmd_vel')]
+                remappings= [('cmd_vel', 'tracks/cmd_vel')]
             ),
             Node(
                 package='nav2_bt_navigator',
@@ -165,8 +161,8 @@ def generate_launch_description():
                 respawn_delay=2.0,
                 parameters=[configured_params, {'use_sim_time': use_sim_time}],
                 remappings=[
-                        ('cmd_vel', 'cmd_vel_bef_smoothed'), 
-                         ('cmd_vel_smoothed', 'cmd_vel')]
+                        ('cmd_vel', 'cmd_vel_nav'), 
+                         ('cmd_vel_smoothed', 'tracks/cmd_vel')]
             ),
             Node(
                 package='nav2_lifecycle_manager',

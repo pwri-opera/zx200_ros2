@@ -21,7 +21,7 @@ class JointStateRepublisher(Node):
         )
 
     def joint_state_cb(self, msg: JointState):
-        # 変更なしでそのまま publish
+        msg.header.frame_id = 'map'
         self.pub.publish(msg)
 
 def main(args=None):
