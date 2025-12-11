@@ -10,7 +10,7 @@ from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 
-from launch_ros.actions import Node, PushRosNamespace, SetParameter
+from launch_ros.actions import Node, PushRosNamespace, SetParameter, SetRemap
 from launch_ros.parameter_descriptions import ParameterValue
 
 from srdfdom.srdf import SRDF
@@ -56,7 +56,7 @@ def launch_setup(context, *args, **kwargs):
         MoveItConfigsBuilder(
             robot_name=robot_name_str, package_name=robot_name_str+"_moveit_config")
         # .robot_description(file_path="config/"+robot_name_str+"_"+command_interface_name_str+"_unity.urdf.xacro")
-        .robot_description(file_path="config/"+robot_name_str+"_effort.urdf.xacro")
+        .robot_description(file_path="config/"+robot_name_str+"_position.urdf.xacro")
         .to_moveit_configs()
     )
 
@@ -68,6 +68,7 @@ def launch_setup(context, *args, **kwargs):
             actions=[
                 PushRosNamespace(robot_name_str),
                 SetParameter('use_sim_time', use_sim_time_str),
+                SetRemap('joint_states', 'front_joint_states'),
                 generate_demo_launch_switch_command_interface(
                     moveit_config, command_interface_name_str
                 )
@@ -104,16 +105,16 @@ def generate_demo_launch_switch_command_interface(moveit_config, command_interfa
     )
     ld.add_action(DeclareBooleanLaunchArg("use_rviz", default_value=True))
 
-    # If there are virtual joints, broadcast static tf by including virtual_joints launch
-    virtual_joints_launch = (
-        moveit_config.package_path / "launch/static_virtual_joint_tfs.launch.py"
-    )
-    if virtual_joints_launch.exists():
-        ld.add_action(
-            IncludeLaunchDescription(
-                PythonLaunchDescriptionSource(str(virtual_joints_launch)),
-            )
-        )
+    # # If there are virtual joints, broadcast static tf by including virtual_joints launch
+    # virtual_joints_launch = (
+    #     moveit_config.package_path / "launch/static_virtual_joint_tfs.launch.py"
+    # )
+    # if virtual_joints_launch.exists():
+    #     ld.add_action(
+    #         IncludeLaunchDescription(
+    #             PythonLaunchDescriptionSource(str(virtual_joints_launch)),
+    #         )
+    #     )
 
     # Given the published joint states, publish tf for the robot links
     ld.add_action(
@@ -154,7 +155,7 @@ def generate_demo_launch_switch_command_interface(moveit_config, command_interfa
 
     # Fake joint driver
     # ros2_controllers_file_name = "ros2_" + command_interface + "_unity_controllers.yaml"
-    ros2_controllers_file_name = "ros2_effort_controllers.yaml"
+    ros2_controllers_file_name = "ros2_position_controllers.yaml"
     ld.add_action(
         Node(
             package="controller_manager",

@@ -1,33 +1,40 @@
-#ifndef UPPER_ARM_EFFORT_CONTROLLER_HPP_
-#define UPPER_ARM_EFFORT_CONTROLLER_HPP_
+#ifndef UPPER_ARM_POSITION_UNITY_HARDWARE_HPP_
+#define UPPER_ARM_POSITION_UNITY_HARDWARE_HPP_
 
 #include <memory>
 #include <string>
 #include <vector>
+#include <thread>
 
 #include "hardware_interface/handle.hpp"
 #include "hardware_interface/hardware_info.hpp"
 #include "hardware_interface/system_interface.hpp"
 #include "hardware_interface/types/hardware_interface_return_values.hpp"
+#include "hardware_interface/types/hardware_interface_type_values.hpp"
+
 #include "rclcpp/macros.hpp"
 #include <rclcpp/rclcpp.hpp>
-#include <std_msgs/msg/float64.hpp>
+
 #include <sensor_msgs/msg/joint_state.hpp>
-#include "zx200_control/visibility_control.h"
 #include "com3_msgs/msg/joint_cmd.hpp"
+
+#include "zx200_control/visibility_control.h"
 
 namespace zx200_control
 {
+
 class Zx200UpperArmPositionUnityHardware : public hardware_interface::SystemInterface
 {
 public:
   RCLCPP_SHARED_PTR_DEFINITIONS(Zx200UpperArmPositionUnityHardware)
 
   ZX200_CONTROL_PUBLIC
-  hardware_interface::CallbackReturn on_init(const hardware_interface::HardwareInfo& info) override;
+  hardware_interface::CallbackReturn on_init(
+      const hardware_interface::HardwareInfo & info) override;
 
   ZX200_CONTROL_PUBLIC
-  hardware_interface::CallbackReturn on_configure(const rclcpp_lifecycle::State& previous_state) override;
+  hardware_interface::CallbackReturn on_configure(
+      const rclcpp_lifecycle::State & previous_state) override;
 
   ZX200_CONTROL_PUBLIC
   std::vector<hardware_interface::StateInterface> export_state_interfaces() override;
@@ -36,30 +43,40 @@ public:
   std::vector<hardware_interface::CommandInterface> export_command_interfaces() override;
 
   ZX200_CONTROL_PUBLIC
-  hardware_interface::CallbackReturn on_activate(const rclcpp_lifecycle::State& previous_state) override;
+  hardware_interface::CallbackReturn on_activate(
+      const rclcpp_lifecycle::State & previous_state) override;
 
   ZX200_CONTROL_PUBLIC
-  hardware_interface::CallbackReturn on_deactivate(const rclcpp_lifecycle::State& previous_state) override;
+  hardware_interface::CallbackReturn on_deactivate(
+      const rclcpp_lifecycle::State & previous_state) override;
 
   ZX200_CONTROL_PUBLIC
-  hardware_interface::return_type read(const rclcpp::Time& time, const rclcpp::Duration& period) override;
+  hardware_interface::return_type read(
+      const rclcpp::Time & time, const rclcpp::Duration & period) override;
 
   ZX200_CONTROL_PUBLIC
-  hardware_interface::return_type write(const rclcpp::Time& time, const rclcpp::Duration& period) override;
+  hardware_interface::return_type write(
+      const rclcpp::Time & time, const rclcpp::Duration & period) override;
 
 private:
-  void js_callback(const sensor_msgs::msg::JointState& msg);
+  void imu_js_callback(const sensor_msgs::msg::JointState & msg);
 
-  std::vector<double> effort_commands_;
+  // command: controller から入力される position
+  std::vector<double> position_commands_;
+
+  // state: Unity (/zx200/joint_states) から取得した値
   std::vector<double> position_states_;
   std::vector<double> velocity_states_;
 
   std::shared_ptr<rclcpp::Node> node_;
   std::thread node_thread_;
   rclcpp::Publisher<com3_msgs::msg::JointCmd>::SharedPtr joint_cmd_pub_;
-  rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr js_sub_;
+  rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr imu_js_sub_;
+
   com3_msgs::msg::JointCmd joint_cmd_msg_;
   sensor_msgs::msg::JointState latest_joint_states_;
 };
+
 }  // namespace zx200_control
-#endif  // UPPER_ARM_CONTROLLER_UNITY_HPP_
+
+#endif  // UPPER_ARM_POSITION_UNITY_HARDWARE_HPP_

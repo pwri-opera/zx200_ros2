@@ -10,7 +10,7 @@ from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 
-from launch_ros.actions import Node, PushRosNamespace
+from launch_ros.actions import Node, PushRosNamespace, SetParameter, SetRemap
 from launch_ros.parameter_descriptions import ParameterValue
 
 from srdfdom.srdf import SRDF
@@ -30,13 +30,17 @@ def generate_launch_description():
         "robot_name", default_value="zx200")
     declare_command_interface_name = DeclareLaunchArgument(
         "command_interface_name", default_value="effort")
+    declare_use_sim_time = DeclareLaunchArgument(
+        "use_sim_time", default_value="false")
 
     ld = LaunchDescription()
 
     ld.add_action(DeclareLaunchArgument("robot_name", default_value="zx200"))
     ld.add_action(DeclareLaunchArgument("command_interface_name", default_value="effort"))
+    ld.add_action(DeclareLaunchArgument("use_sim_time", default_value="false"))
     ld.add_action(declare_robot_name)
     ld.add_action(declare_command_interface_name)
+    ld.add_action(declare_use_sim_time)
     ld.add_action(OpaqueFunction(function=launch_setup))
 
     return ld
@@ -63,6 +67,7 @@ def launch_setup(context, *args, **kwargs):
         GroupAction(
             actions=[
                 PushRosNamespace(robot_name_str),
+                SetRemap('joint_states', 'front_joint_states'),
                 *generate_demo_launch_switch_command_interface(
                     moveit_config, command_interface_name_str
                 )
@@ -89,29 +94,37 @@ def generate_demo_launch_switch_command_interface(moveit_config, command_interfa
                                            description="Start MongoDB if true"))
     actions.append(DeclareBooleanLaunchArg("debug", default_value=False,
                                            description="Enable debug mode"))
-    actions.append(DeclareBooleanLaunchArg("use_rviz", default_value=False,
+    actions.append(DeclareBooleanLaunchArg("use_rviz", default_value=True,
                                            description="Launch RViz if true"))
 
-    # If there are virtual joints, broadcast static tf by including virtual_joints launch# If there are virtual joints, broadcast static tf by including virtual_joints launch
-    svj = moveit_config.package_path / "launch" / "static_virtual_joint_tfs.launch.py"
-    if svj.exists():
-        actions.append(
-            IncludeLaunchDescription(PythonLaunchDescriptionSource(str(svj)))
-        )
+    # use_sim_time parameter
+    use_sim_time = LaunchConfiguration("use_sim_time")
+
+    #     # If there are virtual joints, broadcast static tf by including virtual_joints launch
+    #     svj = moveit_config.package_path / "launch" / "static_virtual_joint_tfs.launch.py"
+    #     if svj.exists():
+    #         actions.append(
+    #             IncludeLaunchDescription(
+    #                 PythonLaunchDescriptionSource(str(svj)),
+    #                 launch_arguments={"use_sim_time": use_sim_time}.items()
+    #             )
+    #         )
 
     # Given the published joint states, publish tf for the robot links
     actions.append(
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
                 str(moveit_config.package_path / "launch" / "rsp.launch.py")
-            )
+            ),
+            launch_arguments={"use_sim_time": use_sim_time}.items()
         )
     )
     actions.append(
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
                 str(moveit_config.package_path / "launch" / "move_group.launch.py")
-            )
+            ),
+            launch_arguments={"use_sim_time": use_sim_time}.items()
         )
     )
 
@@ -122,6 +135,7 @@ def generate_demo_launch_switch_command_interface(moveit_config, command_interfa
                 str(moveit_config.package_path / "launch" / "moveit_rviz.launch.py")
             ),
             condition=IfCondition(LaunchConfiguration("use_rviz")),
+            launch_arguments={"use_sim_time": use_sim_time}.items()
         )
     )
 
@@ -132,6 +146,7 @@ def generate_demo_launch_switch_command_interface(moveit_config, command_interfa
                 str(moveit_config.package_path / "launch" / "warehouse_db.launch.py")
             ),
             condition=IfCondition(LaunchConfiguration("db")),
+            launch_arguments={"use_sim_time": use_sim_time}.items()
         )
     )
 
@@ -144,7 +159,7 @@ def generate_demo_launch_switch_command_interface(moveit_config, command_interfa
         Node(
             package="controller_manager",
             executable="ros2_control_node",
-            parameters=[moveit_config.robot_description, yaml_file],
+            parameters=[moveit_config.robot_description, yaml_file, {"use_sim_time": use_sim_time}],
         )
     )
 
@@ -152,7 +167,8 @@ def generate_demo_launch_switch_command_interface(moveit_config, command_interfa
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
                 str(moveit_config.package_path / "launch" / "spawn_controllers.launch.py")
-            )
+            ),
+            launch_arguments={"use_sim_time": use_sim_time}.items()
         )
     )
 
