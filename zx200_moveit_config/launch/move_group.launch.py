@@ -10,6 +10,10 @@ from moveit_configs_utils.launch_utils import add_debuggable_node, DeclareBoolea
 
 def generate_launch_description():
     moveit_config = MoveItConfigsBuilder("zx200", package_name="zx200_moveit_config").to_moveit_configs()
+    # moveit_config = MoveItConfigsBuilder("zx200", package_name="zx200_moveit_config") \
+    # .robot_description_kinematics(file_path="config/kinematics.yaml") \
+    # .to_moveit_configs()
+
     return generate_move_group_launch(moveit_config)
 
 def generate_move_group_launch(moveit_config):
