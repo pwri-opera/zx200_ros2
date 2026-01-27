@@ -33,10 +33,10 @@
         # boom_joint: {p: 1.4, i: 0.0, d: 0.0}
         # arm_joint: {p: 1.5, i: 0.0, d: 0.0}
         # bucket_joint: {p: 1.0, i: 0.0, d: 0.0}
-        swing_joint: {p: 1.2,  i: 0.3, d: 0.0}
-        boom_joint: {p: 2.4, i: 0.3, d: 0.2}
-        arm_joint: {p: 2.5, i: 0.3, d: 0.2}
-        bucket_joint: {p: 2.0, i: 0.3, d: 0.2}
+        swing_joint: {p: 0.5,  i: 0.3, d: 0.0}
+        boom_joint: {p: 0.5, i: 0.3, d: 0.0}
+        arm_joint: {p: 0.5, i: 0.3, d: 0.0}
+        bucket_joint: {p: 0.5, i: 0.3, d: 0.0}
       constraints:
         goal_time: 60.0                   # Defaults to zero
         # stopped_velocity_tolerance: 0.02 # Defaults to 0.01

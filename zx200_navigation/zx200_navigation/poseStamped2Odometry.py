@@ -16,7 +16,7 @@ class PoseToOdomNode(Node):
         super().__init__('pose_to_odom')
 
         odom_header_frame_param = self.declare_parameter('odom_header_frame', 'world')
-        odom_child_frame_param = self.declare_parameter('odom_child_frame', '/zx200/gnss/base_link')
+        odom_child_frame_param = self.declare_parameter('odom_child_frame', 'base_link')
         poseStamped_topic_name_param = self.declare_parameter('poseStamped_topic_name', '/zx200/global_pose')
         odom_topic_name_param = self.declare_parameter('odom_topic_name', '/zx200/gnss_odom')
 
@@ -81,7 +81,8 @@ class PoseToOdomNode(Node):
                     odom = Odometry()
                     odom.header.frame_id = self.odom_header_frame # 実機実験でframe名が合っているか確認
                     odom.child_frame_id = self.odom_child_frame # 実機実験でframe名が合っているか確認
-                    odom.header.stamp = self.get_clock().now().to_msg()
+                    # odom.header.stamp = self.get_clock().now().to_msg()
+                    odom.header.stamp = self.pose.header.stamp
 
                     odom.pose.pose.position.x = self.pose.pose.position.x
                     odom.pose.pose.position.y = self.pose.pose.position.y

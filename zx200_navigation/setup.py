@@ -35,8 +35,7 @@ setup(
             'poseStamped2Odometry = zx200_navigation.poseStamped2Odometry:main',
             'odom_broadcaster = zx200_navigation.odom_broadcaster:main',
             'map_generator = zx200_navigation.map_generator:main',
-            'fixed_odom_publisher = zx200_navigation.fixed_odom_publisher:main',
-            'fixed_jointstates_publisher = zx200_navigation.fixed_jointstates_publisher:main'
+            'message_converter_odom = zx200_navigation.message_converter_odom:main',
         ],
     },
 )
