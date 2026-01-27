@@ -53,9 +53,9 @@ bt_navigator:
     
     # Defined parameter values such as default_nav_to_pose_bt_xml, default_nav_to_pose_bt_xml and default_nav_through_poses_bt_xml are dummy. 
     # Real parameters are defined in launch.py file.
-    default_nav_to_pose_bt_xml: "/zx200_navigation/params/zx200_navigate_to_pose_w_replanning_and_recovery.xml"
+    # default_nav_to_pose_bt_xml: "/zx200_navigation/params/zx200_navigate_to_pose_w_replanning_and_recovery.xml"
     # default_nav_to_pose_bt_xml: "/zx200_navigation/params/zx200_navigate_to_pose_w_replanning_goal_patience_and_recovery.xml"
-    default_nav_through_poses_bt_xml: "/zx200_navigation/params/zx200_navigate_through_poses_w_replanning_and_recovery.xml"
+    # default_nav_through_poses_bt_xml: "/zx200_navigation/params/zx200_navigate_through_poses_w_replanning_and_recovery.xml"
     
     bt_loop_duration: 10
     default_server_timeout: 20
@@ -164,14 +164,14 @@ controller_server:
       plugin: "dwb_core::DWBLocalPlanner"
       debug_trajectory_details: false
       min_vel_x: -3.0
-      min_vel_y: 0.0
+      min_vel_y: -3.0
       max_vel_x: 3.0
-      max_vel_y: 0.0
-      max_vel_theta: 1.0
-      min_speed_xy: -2.0
-      max_speed_xy: 2.0
-      min_speed_theta: -1.0
-      max_speed_theta: 1.0
+      max_vel_y: 3.0
+      max_vel_theta: 3.0
+      min_speed_xy: -3.0
+      max_speed_xy: 3.0
+      min_speed_theta: -3.0
+      max_speed_theta: 3.0
       acc_lim_x: 3.0 
       acc_lim_y: 0.0
       acc_lim_theta: 3.1
@@ -199,7 +199,7 @@ controller_server:
       PathDist.scale: 32.0
       GoalDist.scale: 24.0
       RotateToGoal.scale: 32.0
-      RotateToGoal.slowing_factor: 5.0
+      RotateToGoal.slowing_factor: 1.0
       RotateToGoal.lookahead_time: -1.0
 
 local_costmap:
@@ -412,10 +412,10 @@ velocity_smoother:
     smoothing_frequency: 10.0
     scale_velocities: False
     feedback: "OPEN_LOOP"
-    max_velocity: [1.0, 0.0, 3.0]
-    min_velocity: [-1.0, 0.0, -3.0]
-    max_accel: [2.5, 0.0, 3.2]
-    max_decel: [-2.5, 0.0, -3.2]
+    max_velocity: [2.0, 2.0, 3.0]
+    min_velocity: [-2.0, -2.0, 3.0]
+    max_accel: [2.5, 2.5, 3.0]
+    max_decel: [-2.5, -2.5, -3.0]
     odom_topic: /zx200/odom
     odom_duration: 0.1
     deadband_velocity: [0.0, 0.0, 0.0]

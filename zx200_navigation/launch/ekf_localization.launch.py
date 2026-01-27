@@ -1,87 +1,114 @@
 import os
-import xacro
-
 from ament_index_python.packages import get_package_share_directory
+
 from launch import LaunchDescription
 from launch.substitutions import LaunchConfiguration
-from launch_ros.actions import Node, PushRosNamespace
 from launch.actions import DeclareLaunchArgument, GroupAction
 from launch.conditions import IfCondition
 
-robot_name="zx200"
-use_namespace=True
+from launch_ros.actions import Node, PushRosNamespace
+
 
 def generate_launch_description():
 
-    zx200_description_dir=get_package_share_directory("zx200_description")
-    zx200_navigation_dir=get_package_share_directory("zx200_navigation")
+    robot_name_arg = DeclareLaunchArgument('robot_name', default_value='zx200_1')
+    use_namespace_arg = DeclareLaunchArgument('use_namespace', default_value='true')
+    use_sim_time_arg = DeclareLaunchArgument('use_sim_time', default_value='false')
 
-    zx200_ekf_yaml_file = LaunchConfiguration('ekf_yaml_file', default=os.path.join(zx200_navigation_dir, 'config', 'zx200_ekf.yaml'))
-    xacro_model = os.path.join(zx200_description_dir, "urdf", "zx200.xacro")
-    
-    doc = xacro.parse(open(xacro_model))
-    xacro.process_doc(doc)
-    params = {'robot_description': doc.toxml()}
+    robot_name = LaunchConfiguration('robot_name')
+    use_namespace = LaunchConfiguration('use_namespace')
+    use_sim_time = LaunchConfiguration('use_sim_time')
 
     return LaunchDescription([
-
-        DeclareLaunchArgument('robot_name', default_value='zx200'),
+        robot_name_arg,
+        use_namespace_arg,
+        use_sim_time_arg,
 
         GroupAction([
             PushRosNamespace(
-                condition=IfCondition(str(use_namespace)),
+                condition=IfCondition(use_namespace),
                 namespace=robot_name
             ),
-            Node(
-                package='tf2_ros',
-                executable='static_transform_publisher',
-                name='world_to_map',
-                arguments=['--x','21395.178', 
-                           '--y','14034.450', 
-                           '--z','28.552', 
-                           '--roll','0', 
-                           '--pitch','0', 
-                           '--yaw','0', 
-                           '--frame-id', 'world',
-                           '--child-frame-id', 'map']
-            ),
+
             Node(
                 package='zx200_navigation',
                 executable='odom_broadcaster',
                 name='odom_broadcaster',
                 output="screen",
-                parameters=[{'odom_topic': 'odom_pose'},
-                            {'odom_frame': 'odom'},
-                            {'base_link_frame': 'base_link'}]
-            ),            
+                parameters=[
+                    {'odom_topic': 'fixed_odom', 
+                     'odom_frame': '/odom',
+                     'base_link_frame': '/base_link',
+                     'use_sim_time': use_sim_time,
+                    },
+                ]
+            ),
             Node(
                 package='zx200_navigation',
                 executable='poseStamped2Odometry',
                 name='poseStamped2ground_truth_odom',
                 output="screen",
-                parameters=[{'odom_header_frame': "world",
+                parameters=[{'odom_header_frame': "map",
                                 'odom_child_frame': "base_link",
-                                'poseStamped_topic_name': "global_pose",
-                                'odom_topic_name': "gnss_odom"}]
-            ),                               
+                                'poseStamped_topic_name': "base_link/pose",
+                                'odom_topic_name': "global_pose",
+                                'use_sim_time': use_sim_time}]
+            ),     
             Node(
-                package='robot_state_publisher',
-                executable='robot_state_publisher',
-                output="screen",
-                parameters=[params],
-            ), 
+                package = 'zx200_navigation',
+                executable = 'message_converter_odom',
+                name = "message_converter_odom",
+                output = "screen",
+                parameters=[{'input_topic': "odom",
+                            'output_topic': 'fixed_odom',
+                            'use_sim_time': use_sim_time}],
+            ),
+
             Node(
                 package='robot_localization',
                 executable='ekf_node',
                 name='ekf_global',
                 output="screen",
-                remappings=[('odometry/filtered','odometry/global')],
-                parameters=[zx200_ekf_yaml_file,
-                                            {
-                                            'use_sim_time' : False, 
-                                            'odom0' : 'odom_pose',
-                                            'odom1' : 'gnss_odom',
-                                            }]
+                remappings=[
+                    ('odometry/filtered', 'odometry/global'),
+                    ('odom0', 'fixed_odom'),
+                    ('odom1', 'global_pose'),
+                ],
+                parameters=[{
+                    'debug': False,
+                    'frequency': 10.0,
+                    'transform_time_offset': 0.0,
+                    'transform_timeout': 0.0,
+                    'print_diagnostics': True,
+                    'publish_acceleration': True,
+                    'publish_tf': True,
+                    'two_d_mode': True,
+                    'map_frame': 'map',
+                    'odom_frame': 'odom',
+                    'base_link_frame': 'base_link',
+                    'world_frame': 'map',
+                    'use_sim_time': use_sim_time,
+
+                    'odom0': 'fixed_odom',
+                    'odom0_queue_size': 10,
+                    'odom0_config': [
+                        True,  True,  False,
+                        False, False, True,
+                        False, False, False,
+                        False, False, False,
+                        False, False, False],
+                    'odom0_differential': True,
+
+                    'odom1': 'global_pose',
+                    'odom1_queue_size': 10,
+                    'odom1_config': [
+                        True,  True,  True,
+                        False, False, True,
+                        False, False, False,
+                        False, False, False,
+                        False, False, False],
+                    'odom1_differential': False,
+                }]
             ),
         ])
     ])
