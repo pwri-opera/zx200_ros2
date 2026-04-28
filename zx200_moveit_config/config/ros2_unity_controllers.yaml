@@ -31,4 +31,7 @@
       #   boom_joint: {p: 0.0, i: 0.0, d: 0.0}
       #   arm_joint: {p: 0.0, i: 0.0, d: 0.0}
       #   bucket_joint: {p: 0.0, i: 0.0, d: 0.0}
-
+      joint_limits:
+        swing_joint:
+          has_position_limits: false
+          angle_wraparound: true
