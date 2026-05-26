@@ -78,7 +78,7 @@ def generate_launch_description():
             ),
             DeclareLaunchArgument(
                 "use_joint_state_publisher",
-                default_value="true",
+                default_value="false",
                 description=(
                     "Launch joint_state_publisher for standalone visualization. "
                     "Set false when another node publishes JointState."
@@ -86,7 +86,7 @@ def generate_launch_description():
             ),
             DeclareLaunchArgument(
                 "joint_states_topic",
-                default_value="/joint_states",
+                default_value="/zx200/joint_states",
                 description="JointState topic for robot_state_publisher",
             ),
             DeclareLaunchArgument(
