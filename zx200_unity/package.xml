@@ -8,13 +8,14 @@
   <license>TODO: License declaration</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
-
+  <buildtool_depend>ament_cmake_python</buildtool_depend>
   <!--	
   <depend>move_base</depend>
   -->
 
   <depend>tf2_ros</depend>
   <depend>rviz2</depend>
+  <depend>rclpy</depend>
   <depend>joint_state_publisher</depend>
   <depend>robot_state_publisher</depend>
   <depend>rclcpp_components</depend>

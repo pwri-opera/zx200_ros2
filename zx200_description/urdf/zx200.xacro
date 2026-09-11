@@ -32,8 +32,8 @@
 			<origin xyz="0 0 0" rpy="0 0 0"/>
 			<mass value="0.03"/>
 			<inertia ixx="1.0" ixy="0.0" ixz="0.0"
-								iyy="1.0" iyz="0.0"
-											izz="1.0"/>
+					 iyy="1.0" iyz="0.0"
+					 izz="1.0"/>
 		</inertial>
 	</link>
 
@@ -64,20 +64,23 @@
 			<origin xyz="0 0 0" rpy="0 0 0"/>
 			<mass value="0.03"/>
 			<inertia ixx="1.0" ixy="0.0" ixz="0.0"
-								iyy="1.0" iyz="0.0"
-											izz="1.0"/>
+					 iyy="1.0" iyz="0.0"
+					 izz="1.0"/>
 		</inertial>
 	</link>
 
 	<!-- boom axis -->
 	<joint name="boom_joint" type="revolute">
-		<origin rpy="0 ${radians(32.0357)} 0" xyz="0.22767 -0.040187 0.83669"/>
+		<origin rpy="0 ${radians(32.0357)} 0"
+				xyz="0.05467 -0.040187 0.72492"/>
 		<axis xyz="0 1 0"/>
 		<parent link="body_link"/>
 		<child link="boom_link"/>
-		<limit lower="-1.137" upper="-0.1" effort="500" velocity="6.159937255"/>
+		<limit lower="-1.137"
+			   upper="1.0"
+			   effort="500"
+			   velocity="6.159937255"/>
 	</joint>
-
 
 	<link name="boom_link">
 		<visual>
@@ -98,17 +101,21 @@
 			<origin xyz="0 0 0" rpy="0 0 0"/>
 			<mass value="0.03"/>
 			<inertia ixx="1.0" ixy="0.0" ixz="0.0"
-								iyy="1.0" iyz="0.0"
-											izz="1.0"/>
+					 iyy="1.0" iyz="0.0"
+					 izz="1.0"/>
 		</inertial>
 	</link>
 
 	<joint name="arm_joint" type="revolute">
-		<origin rpy="0 ${radians(16.9707)} 0" xyz="4.7878 0.010957 2.9959"/>
+		<origin rpy="0 ${radians(16.9707)} 0"
+				xyz="4.83998 0.010957 3.00227"/>
 		<axis xyz="0 1 0"/>
 		<parent link="boom_link"/>
 		<child link="arm_link"/>
-		<limit lower="0.594" upper="2.687" effort="500" velocity="6.159937255"/>
+		<limit lower="0.594"
+			   upper="2.687"
+			   effort="500"
+			   velocity="6.159937255"/>
 	</joint>
 
 	<link name="arm_link">
@@ -130,18 +137,22 @@
 			<origin xyz="0 0 0" rpy="0 0 0"/>
 			<mass value="0.03"/>
 			<inertia ixx="1.0" ixy="0.0" ixz="0.0"
-								iyy="1.0" iyz="0.0"
-											izz="1.0"/>
+					 iyy="1.0" iyz="0.0"
+					 izz="1.0"/>
 		</inertial>
 	</link>
 
 	<!-- bucket axis -->
 	<joint name="bucket_joint" type="revolute">
-		<origin rpy="0 ${radians(-9.20083)} 0" xyz="1.8954 -0.023546 2.1809"/>
+		<origin rpy="0 ${radians(-9.20083)} 0"
+				xyz="1.91546 -0.023546 2.17374"/>
 		<axis xyz="0 1 0"/>
 		<parent link="arm_link"/>
 		<child link="bucket_link"/>
-		<limit lower="-0.622" upper="2.372" effort="50000" velocity="6.159937255"/>
+		<limit lower="-0.622"
+			   upper="2.372"
+			   effort="50000"
+			   velocity="6.159937255"/>
 	</joint>
 
 	<link name="bucket_link">
@@ -163,8 +174,8 @@
 			<origin xyz="0 0 0" rpy="0 0 0"/>
 			<mass value="0.03"/>
 			<inertia ixx="1.0" ixy="0.0" ixz="0.0"
-								iyy="1.0" iyz="0.0"
-											izz="1.0"/>
+					 iyy="1.0" iyz="0.0"
+					 izz="1.0"/>
 		</inertial>
 	</link>
 
@@ -172,33 +183,42 @@
 		<visual>
 			<origin xyz="0 0 0" rpy="0 0 0"/>
 			<geometry>
-				<box size="0.001 0.001 0.001" />
+				<box size="0.001 0.001 0.001"/>
 			</geometry>
 		</visual>
-		<inertial>
-			<origin xyz="0 0 0" />
-			<mass value="1.0e-03" />
-			<inertia ixx="1.0e-03" ixy="0.0" ixz="0.0"
-					iyy="1.0e-03" iyz="0.0"
-					izz="1.0e-03" />
-		</inertial>
-  	</link>
 
-  <joint name="bucket_end_joint" type="revolute">
-    <parent link="bucket_link"/>
-    <child link="bucket_end_link"/>
-    <axis xyz="1 0 0"/>
-    <origin rpy="0 ${radians(105)} 0" xyz="1.25 0 0.82"/>
-    <limit effort="1" lower="-3.14" upper="3.14" velocity="0.5"/>
-  </joint>
+		<inertial>
+			<origin xyz="0 0 0"/>
+			<mass value="1.0e-03"/>
+			<inertia ixx="1.0e-03" ixy="0.0" ixz="0.0"
+					 iyy="1.0e-03" iyz="0.0"
+					 izz="1.0e-03"/>
+		</inertial>
+	</link>
+
+	<joint name="bucket_end_joint" type="revolute">
+		<parent link="bucket_link"/>
+		<child link="bucket_end_link"/>
+		<axis xyz="1 0 0"/>
+		<origin rpy="0 0 0"
+				xyz="1.13012 0 0.93856"/>
+		<limit effort="1"
+			   lower="-3.14"
+			   upper="3.14"
+			   velocity="0.5"/>
+	</joint>
 
 	<transmission name="tran1">
 		<type>transmission_interface/SimpleTransmission</type>
 		<joint name="swing_joint">
-			<hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+			<hardwareInterface>
+				hardware_interface/EffortJointInterface
+			</hardwareInterface>
 		</joint>
 		<actuator name="motor1">
-			<hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+			<hardwareInterface>
+				hardware_interface/EffortJointInterface
+			</hardwareInterface>
 			<mechanicalReduction>1</mechanicalReduction>
 		</actuator>
 	</transmission>
@@ -206,10 +226,14 @@
 	<transmission name="tran2">
 		<type>transmission_interface/SimpleTransmission</type>
 		<joint name="boom_joint">
-			<hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+			<hardwareInterface>
+				hardware_interface/EffortJointInterface
+			</hardwareInterface>
 		</joint>
 		<actuator name="motor2">
-			<hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+			<hardwareInterface>
+				hardware_interface/EffortJointInterface
+			</hardwareInterface>
 			<mechanicalReduction>1</mechanicalReduction>
 		</actuator>
 	</transmission>
@@ -217,10 +241,14 @@
 	<transmission name="tran3">
 		<type>transmission_interface/SimpleTransmission</type>
 		<joint name="arm_joint">
-			<hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+			<hardwareInterface>
+				hardware_interface/EffortJointInterface
+			</hardwareInterface>
 		</joint>
 		<actuator name="motor3">
-			<hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+			<hardwareInterface>
+				hardware_interface/EffortJointInterface
+			</hardwareInterface>
 			<mechanicalReduction>1</mechanicalReduction>
 		</actuator>
 	</transmission>
@@ -228,10 +256,14 @@
 	<transmission name="tran4">
 		<type>transmission_interface/SimpleTransmission</type>
 		<joint name="bucket_joint">
-			<hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+			<hardwareInterface>
+				hardware_interface/EffortJointInterface
+			</hardwareInterface>
 		</joint>
 		<actuator name="motor4">
-			<hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+			<hardwareInterface>
+				hardware_interface/EffortJointInterface
+			</hardwareInterface>
 			<mechanicalReduction>1</mechanicalReduction>
 		</actuator>
 	</transmission>

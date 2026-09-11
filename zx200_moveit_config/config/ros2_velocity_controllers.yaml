@@ -8,9 +8,6 @@
         # type: dt_compensated_joint_trajectory_controller/DTCompensatedJointTrajectoryController      
         type: joint_trajectory_controller/JointTrajectoryController
 
-      joint_state_broadcaster:
-        type: joint_state_broadcaster/JointStateBroadcaster
-
   upper_arm_controller:
     ros__parameters:
       joints:

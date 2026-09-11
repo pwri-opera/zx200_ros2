@@ -28,13 +28,22 @@ opaque_function_complete_event = Event()
 def load_params(context, **kwargs):
     global configured_params, zx200_ekf_yaml_file
     zx200_navigation_dir = get_package_share_directory('zx200_navigation')
-    navigation_parameters_yaml_file = os.path.join(zx200_navigation_dir, 'params', 'navigation_parameters.yaml')
+    navigation_parameters_yaml_file = os.path.join(zx200_navigation_dir, 'params', 'navigation_parameters_sim.yaml')
     zx200_ekf_yaml_file = LaunchConfiguration('ekf_yaml_file', default=os.path.join(zx200_navigation_dir, 'config', 'zx200_ekf.yaml'))
 
     map_yaml_file = LaunchConfiguration('map', default=os.path.join(zx200_navigation_dir, 'map', 'map.yaml'))
+    
     param_substitutions = {
         'use_sim_time': str(use_sim_time),
-        'yaml_filename': map_yaml_file}
+        'yaml_filename': map_yaml_file,
+        
+         # bt_navigator
+        'bt_navigator.ros__parameters.default_nav_to_pose_bt_xml': os.path.join(zx200_navigation_dir, 'params', 'zx200_navigate_to_pose_w_replanning_and_recovery.xml'),
+        'bt_navigator.ros__parameters.default_nav_through_poses_bt_xml': os.path.join(zx200_navigation_dir, 'params', 'zx200_navigate_through_poses_w_replanning_and_recovery.xml'),
+
+
+
+    }
     
     configured_params = RewrittenYaml(
             source_file=navigation_parameters_yaml_file,
@@ -46,7 +55,7 @@ def load_params(context, **kwargs):
 def generate_nodes(context, *args, **kwargs):
     opaque_function_complete_event.wait()
     zx200_unity_dir = get_package_share_directory("zx200_unity")
-    zx200_standby_rviz_file = os.path.join(zx200_unity_dir, "rviz2", "zx200_standby.rviz")
+    zx200_standby_rviz_file = os.path.join(zx200_unity_dir, "rviz2", "zx200_standby_sim.rviz")
     zx200_description_dir = get_package_share_directory("zx200_description")
 
     zx200_xacro_file = os.path.join(zx200_description_dir, "urdf", "zx200.xacro")
@@ -88,21 +97,21 @@ def generate_nodes(context, *args, **kwargs):
             executable='odom_broadcaster',
             name='odom_broadcaster',
             output="screen",
-            parameters=[{'odom_topic': 'odom'},
+            parameters=[{'odom_topic': 'odom_pose'},
                         {'odom_frame': 'odom'},
                         {'base_link_frame': 'base_link'}]
         ),    
-        Node(
-            package='zx200_navigation',
-            executable='poseStamped2Odometry',
-            name='poseStamped2ground_truth_odom',
-            output="screen",
-            parameters=[{'odom_header_frame': "map",
-                            'odom_child_frame': "base_link",
-                            'poseStamped_topic_name': "base_link/pose",
-                            'odom_topic_name': "tracking/ground_truth",
-                            'use_sim_time': True}]
-        ),                
+        # Node(
+        #     package='zx200_navigation',
+        #     executable='poseStamped2Odometry',
+        #     name='poseStamped2ground_truth_odom',
+        #     output="screen",
+        #     parameters=[{'odom_header_frame': "map",
+        #                     'odom_child_frame': "base_link",
+        #                     'poseStamped_topic_name': "base_link/pose",
+        #                     'odom_topic_name': "tracking/ground_truth",
+        #                     'use_sim_time': True}]
+        # ),                
         Node(
             package='robot_state_publisher',
             executable='robot_state_publisher',
@@ -147,13 +156,11 @@ def generate_nodes(context, *args, **kwargs):
             executable='ekf_node',
             name='ekf_global',
             output="screen",
-            remappings=[('odometry/filtered','odometry/global'),
-                        ('odom0','odom_pose'),
-                        ('odom1','gnss_odom')], 
+            remappings=[('odometry/filtered','odometry/global')], 
             parameters=[zx200_ekf_yaml_file,
                                         {
-                                        'odom0' : 'fixed_odom',
-                                        'odom1' : 'tracking/ground_truth',
+                                        'odom0' : 'odom_pose',
+                                        'odom1' : 'global_pose',
                                         }]
         ),
         Node(
@@ -204,7 +211,7 @@ def generate_nodes(context, *args, **kwargs):
             respawn=use_respawn,
             respawn_delay=2.0,
             parameters=[configured_params, {'use_sim_time': use_sim_time}],
-            remappings= [('cmd_vel', 'tracks/cmd_vel')]
+            remappings= [('cmd_vel', 'cmd_vel')]
         ),
         Node(
             package='nav2_bt_navigator',
