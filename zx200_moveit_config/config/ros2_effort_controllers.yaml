@@ -18,7 +18,6 @@
         - boom_joint
         - arm_joint
         - bucket_joint
-        - bucket_end_joint
       command_interfaces:
         # - position
         # - velocity

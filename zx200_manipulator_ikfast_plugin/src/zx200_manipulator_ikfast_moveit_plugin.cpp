@@ -47,6 +47,10 @@
 #include <Eigen/Geometry>
 #include <tf2_kdl/tf2_kdl.hpp>
 #include <tf2_eigen/tf2_eigen.hpp>
+#include <Eigen/SVD>
+#include <algorithm>
+#include <array>
+#include <cmath>
 
 using namespace moveit::core;
 
@@ -159,6 +163,16 @@ class IKFastKinematicsPlugin : public kinematics::KinematicsBase
   std::vector<std::string> link_names_;
   const size_t num_joints_;
   std::vector<int> free_params_;
+  const moveit::core::JointModelGroup* joint_model_group_ = nullptr;
+  const moveit::core::LinkModel* ikfast_tip_link_model_ = nullptr;
+  const moveit::core::LinkModel* ikfast_base_link_model_ = nullptr;
+
+  // The generation model absorbs the fixed rotations about the boom, arm, and bucket
+  // joint axes into the corresponding joint variables:
+  //   q_ikfast = q_robot + offset
+  // IKFast solutions are converted back before limit checks and before being returned.
+  const std::array<double, 5> joint_offsets_{ { 0.0, 0.5591284431811474, 0.2961945913682017,
+                                                -0.16058477741626986, 0.0 } };
 
   // The ikfast and base frame are the start and end of the kinematic chain for which the
   // IKFast analytic solution was generated.
@@ -371,6 +385,16 @@ private:
    * @param  ik_pose_chain       The ik_pose to be populated with the appropriate pose for the solver
    */
   void transformToChainFrame(const geometry_msgs::msg::Pose& ik_pose, KDL::Frame& ik_pose_chain) const;
+
+  /**
+   * @brief Direction-aware numerical fallback for rare configurations omitted by IKFast.
+   *
+   * Solves the same TranslationDirection5D task as IKFast: three translation
+   * components plus the end-effector local Z direction. Returns only solutions
+   * that obey the RobotModel joint limits and meet strict residual tolerances.
+   */
+  bool numericalFallback(const geometry_msgs::msg::Pose& ik_pose, const std::vector<double>& ik_seed_state,
+                         std::vector<double>& solution) const;
 };  // end class
 
 bool IKFastKinematicsPlugin::computeRelativeTransform(const std::string& from, const std::string& to,
@@ -410,14 +434,13 @@ bool IKFastKinematicsPlugin::initialize(const rclcpp::Node::SharedPtr& node,
   }
 
   storeValues(robot_model, group_name, base_frame, tip_frames, search_discretization);
-  if (!lookupParam(node, "link_prefix", link_prefix_, std::string("")))
-  {
-    RCLCPP_INFO(LOGGER, "Using empty link_prefix.");
-  }
-  else
-  {
-    RCLCPP_INFO_STREAM(LOGGER, "Using link_prefix: '" << link_prefix_ << "'");
-  }
+  // This solver is generated for the explicitly configured base_link ->
+  // bucket_end_link chain.  The lookupParam() helper used by older generated
+  // MoveIt plugins was removed in Jazzy, and this robot does not use a link
+  // prefix, so keep the generated chain names exact.
+  (void)node;
+  link_prefix_.clear();
+  RCLCPP_INFO(LOGGER, "Using empty link_prefix for the ZX200 IKFast chain.");
 
   // verbose error output. subsequent checks in computeRelativeTransform return false then
   if (!robot_model.hasLinkModel(tip_frames_[0]))
@@ -501,6 +524,23 @@ bool IKFastKinematicsPlugin::initialize(const rclcpp::Node::SharedPtr& node,
   std::reverse(joint_min_vector_.begin(), joint_min_vector_.end());
   std::reverse(joint_max_vector_.begin(), joint_max_vector_.end());
   std::reverse(joint_has_limits_vector_.begin(), joint_has_limits_vector_.end());
+
+  const std::array<std::string, 5> expected_joint_names{ { "swing_joint", "boom_joint", "arm_joint",
+                                                           "bucket_joint", "bucket_end_joint" } };
+  if (!std::equal(expected_joint_names.begin(), expected_joint_names.end(), joint_names_.begin()))
+  {
+    RCLCPP_FATAL(LOGGER, "Unexpected joint order; refusing to apply IKFast joint offsets");
+    return false;
+  }
+
+  joint_model_group_ = jmg;
+  ikfast_tip_link_model_ = robot_model_->getLinkModel(link_prefix_ + IKFAST_TIP_FRAME_);
+  ikfast_base_link_model_ = robot_model_->getLinkModel(link_prefix_ + IKFAST_BASE_FRAME_);
+  if (!ikfast_tip_link_model_ || !ikfast_base_link_model_)
+  {
+    RCLCPP_FATAL(LOGGER, "Failed to resolve IKFast base/tip links for numerical fallback");
+    return false;
+  }
 
   for (size_t joint_id = 0; joint_id < num_joints_; ++joint_id)
     RCLCPP_DEBUG_STREAM(LOGGER, joint_names_[joint_id] << " " << joint_min_vector_[joint_id] << " "
@@ -663,6 +703,9 @@ void IKFastKinematicsPlugin::getSolution(const IkSolutionList<IkReal>& solutions
   sol.GetSolution(&solution[0], vsolfree.size() > 0 ? &vsolfree[0] : nullptr);
 
   for (std::size_t joint_id = 0; joint_id < num_joints_; ++joint_id)
+    solution[joint_id] -= joint_offsets_[joint_id];
+
+  for (std::size_t joint_id = 0; joint_id < num_joints_; ++joint_id)
   {
     if (joint_has_limits_vector_[joint_id])
     {
@@ -682,6 +725,9 @@ void IKFastKinematicsPlugin::getSolution(const IkSolutionList<IkReal>& solutions
   const IkSolutionBase<IkReal>& sol = solutions.GetSolution(i);
   std::vector<IkReal> vsolfree(sol.GetFree().size());
   sol.GetSolution(&solution[0], vsolfree.size() > 0 ? &vsolfree[0] : nullptr);
+
+  for (std::size_t joint_id = 0; joint_id < num_joints_; ++joint_id)
+    solution[joint_id] -= joint_offsets_[joint_id];
 
   // rotate joints by +/-360° where it is possible and useful
   for (std::size_t i = 0; i < num_joints_; ++i)
@@ -718,6 +764,95 @@ double IKFastKinematicsPlugin::enforceLimits(double joint_value, double min, dou
     joint_value += 2 * M_PI;
   }
   return joint_value;
+}
+
+bool IKFastKinematicsPlugin::numericalFallback(const geometry_msgs::msg::Pose& ik_pose,
+                                               const std::vector<double>& ik_seed_state,
+                                               std::vector<double>& solution) const
+{
+  if (!joint_model_group_ || !ikfast_tip_link_model_ || !ikfast_base_link_model_ ||
+      ik_seed_state.size() != num_joints_)
+    return false;
+
+  KDL::Frame target_frame;
+  transformToChainFrame(ik_pose, target_frame);
+  const Eigen::Vector3d target_position(target_frame.p.x(), target_frame.p.y(), target_frame.p.z());
+  const KDL::Vector target_z_kdl = target_frame.M * KDL::Vector(0.0, 0.0, 1.0);
+  const Eigen::Vector3d target_z(target_z_kdl.x(), target_z_kdl.y(), target_z_kdl.z());
+
+  std::vector<double> q = ik_seed_state;
+  moveit::core::RobotState state(robot_model_);
+  state.setToDefaultValues();
+
+  constexpr int MAX_ITERATIONS = 150;
+  constexpr double POSITION_TOLERANCE = 1e-5;
+  constexpr double DIRECTION_TOLERANCE = 1e-5;
+  constexpr double DAMPING = 1e-4;
+  constexpr double MAX_STEP = 0.2;
+
+  for (int iteration = 0; iteration < MAX_ITERATIONS; ++iteration)
+  {
+    state.setVariablePositions(joint_names_, q);
+    state.updateLinkTransforms();
+
+    const Eigen::Isometry3d& base_global = state.getGlobalLinkTransform(ikfast_base_link_model_);
+    const Eigen::Isometry3d& tip_global = state.getGlobalLinkTransform(ikfast_tip_link_model_);
+    const Eigen::Isometry3d current = base_global.inverse() * tip_global;
+    const Eigen::Vector3d current_z = current.linear().col(2);
+    const Eigen::Vector3d position_error = target_position - current.translation();
+    const Eigen::Vector3d direction_error = target_z - current_z;
+
+    if (position_error.norm() <= POSITION_TOLERANCE && direction_error.norm() <= DIRECTION_TOLERANCE)
+    {
+      for (std::size_t i = 0; i < num_joints_; ++i)
+      {
+        if (joint_has_limits_vector_[i] &&
+            (q[i] < joint_min_vector_[i] - LIMIT_TOLERANCE || q[i] > joint_max_vector_[i] + LIMIT_TOLERANCE))
+          return false;
+      }
+      solution = q;
+      return true;
+    }
+
+    Eigen::MatrixXd world_jacobian;
+    if (!state.getJacobian(joint_model_group_, ikfast_tip_link_model_, Eigen::Vector3d::Zero(), world_jacobian) ||
+        world_jacobian.rows() != 6 || world_jacobian.cols() != static_cast<Eigen::Index>(num_joints_))
+      return false;
+
+    const Eigen::Matrix3d world_to_base = base_global.linear().transpose();
+    const Eigen::MatrixXd linear_jacobian = world_to_base * world_jacobian.topRows(3);
+    const Eigen::MatrixXd angular_jacobian = world_to_base * world_jacobian.bottomRows(3);
+    Eigen::Matrix3d skew_z;
+    skew_z << 0.0, -current_z.z(), current_z.y(), current_z.z(), 0.0, -current_z.x(), -current_z.y(),
+        current_z.x(), 0.0;
+
+    Eigen::MatrixXd task_jacobian(6, num_joints_);
+    task_jacobian.topRows(3) = linear_jacobian;
+    task_jacobian.bottomRows(3) = -skew_z * angular_jacobian;
+    Eigen::Matrix<double, 6, 1> task_error;
+    task_error << position_error, direction_error;
+
+    Eigen::JacobiSVD<Eigen::MatrixXd> svd(task_jacobian, Eigen::ComputeThinU | Eigen::ComputeThinV);
+    Eigen::VectorXd damped = svd.singularValues();
+    for (Eigen::Index i = 0; i < damped.size(); ++i)
+      damped[i] = damped[i] / (damped[i] * damped[i] + DAMPING * DAMPING);
+    Eigen::VectorXd delta = svd.matrixV() * damped.asDiagonal() * svd.matrixU().transpose() * task_error;
+    if (!delta.allFinite())
+      return false;
+    if (delta.norm() > MAX_STEP)
+      delta *= MAX_STEP / delta.norm();
+
+    for (std::size_t i = 0; i < num_joints_; ++i)
+    {
+      q[i] += delta[static_cast<Eigen::Index>(i)];
+      if (joint_has_limits_vector_[i])
+        q[i] = std::max(joint_min_vector_[i], std::min(joint_max_vector_[i], q[i]));
+      else
+        q[i] = ik_seed_state[i] + std::remainder(q[i] - ik_seed_state[i], 2.0 * M_PI);
+    }
+  }
+
+  return false;
 }
 
 void IKFastKinematicsPlugin::fillFreeParams(int count, int* array)
@@ -1142,8 +1277,8 @@ bool IKFastKinematicsPlugin::getPositionIK(const geometry_msgs::msg::Pose& ik_po
     {
       std::vector<double> sol;
       getSolution(solutions, ik_seed_state, s, sol);
-      RCLCPP_DEBUG(LOGGER, "Sol %d: %e   %e   %e   %e   %e   %e", static_cast<int>(s), sol[0], sol[1], sol[2], sol[3],
-                   sol[4], sol[5]);
+      RCLCPP_DEBUG_STREAM(LOGGER, "Sol " << s << ": " << sol[0] << " " << sol[1] << " " << sol[2] << " "
+                                          << sol[3] << " " << sol[4]);
 
       bool obeys_limits = true;
       for (std::size_t i = 0; i < sol.size(); ++i)
@@ -1184,6 +1319,13 @@ bool IKFastKinematicsPlugin::getPositionIK(const geometry_msgs::msg::Pose& ik_po
   {
     std::sort(solutions_obey_limits.begin(), solutions_obey_limits.end());
     solution = solutions_obey_limits[0].value;
+    error_code.val = moveit_msgs::msg::MoveItErrorCodes::SUCCESS;
+    return true;
+  }
+
+  if (numericalFallback(ik_pose, ik_seed_state, solution))
+  {
+    RCLCPP_DEBUG(LOGGER, "Using direction-aware numerical IK fallback");
     error_code.val = moveit_msgs::msg::MoveItErrorCodes::SUCCESS;
     return true;
   }
@@ -1329,6 +1471,14 @@ bool IKFastKinematicsPlugin::getPositionIK(const std::vector<geometry_msgs::msg:
   else
   {
     RCLCPP_DEBUG_STREAM(LOGGER, "No IK solution");
+  }
+
+  std::vector<double> fallback_solution;
+  if (numericalFallback(ik_poses[0], ik_seed_state, fallback_solution))
+  {
+    solutions.push_back(fallback_solution);
+    result.kinematic_error = kinematics::KinematicErrors::OK;
+    return true;
   }
 
   result.kinematic_error = kinematics::KinematicErrors::NO_SOLUTION;
