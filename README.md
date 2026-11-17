@@ -33,7 +33,7 @@ OPERA 対応油圧ショベル zx200 の土木研究所公開 ROS2 パッケー�
 ## 含有するサブパッケージ
 
 ### zx200_bringup:
-- excavator_com3_ros を除く，zx200 の実機を動作させる際に必要なノード群を一括起動するための launch 用サブパッケージ
+- zx200_com3_ros と，zx200 の実機を動作させる際に必要なノード群を一括起動するための launch 用サブパッケージ。COM3を別起動済みなら `start_com3:=false` を指定。
 
 ### zx200_control:
 - [ros_control](http://wiki.ros.org/ros_control) の枠組みに倣い，
@@ -63,7 +63,7 @@ OPERA 対応油圧ショベル zx200 の土木研究所公開 ROS2 パッケー�
 
 2. 車載PCと自動運転コントローラのCANベースcom3通信開始（アライブカウンタ入力＋エンジンローアイドル指令）．以下のコマンドを実行
   ```bash
-  ros2 launch zx200_com3_ros zx200_com3_ros.launch.py
+  ros2 launch zx200_com3_ros zx200_com3_ros.launch.py input_plane:=9 output_plane:=6
   ```
 3. ロック解除リモコンを用いてエンジン始動
 
@@ -80,11 +80,42 @@ OPERA 対応油圧ショベル zx200 の土木研究所公開 ROS2 パッケー�
   # 作業機のセットアップ(油圧ロック解除まで)が完了した状態で実行
   # command_interface_nameは"effort"か"velocity"
   # use_rvizはTrueかFalse
-  ros2 launch zx200_bringup vehicle.launch.py command_interface_name:=<commnad_interface_name> use_rviz:=<use_rviz>
+  ros2 launch zx200_bringup vehicle.launch.py start_com3:=false command_interface_name:=<commnad_interface_name> use_rviz:=<use_rviz>
   ```
 > **注:** rvizを使用する場合，RDP接続した車載PCにてターミナルを起動する。SSH 接続だとlaunchの実行時にエラーが発生．
 
 7. Rviz 上で目標姿勢を定め，`plan & execute` ボタンで軌道を計画・実行
+
+### vehicle launchからCOM3と座標変換を起動
+
+`zx200_com3_ros`も `main` ブランチを使用してビルドしてください。
+追加依存は `libproj-dev` / `proj-data` / `pkg-config` です。
+
+```bash
+ros2 launch zx200_bringup vehicle.launch.py \
+  robot_name:=zx200 input_plane:=9 output_plane:=6
+```
+
+`start_com3`は既定で`true`です。既存のCOM3ノードを停止してから一括起動してください。
+上記の実機操作手順のようにCOM3を先に別起動した場合は、vehicleに
+`start_com3:=false`を指定し、系番号は**先に起動するCOM3側**で指定します。
+vehicleから既に起動している別ノードのパラメータを書き換えることはありません。
+エンジン始動・油圧ロックなどの実機操作手順は従来どおりです。
+
+| 引数 | 既定値 | 内容 |
+| --- | --- | --- |
+| `input_plane` | `9` | CANの測量座標系（1〜19） |
+| `output_plane` | `6` | global_poseの出力系（1〜19） |
+| `pose_timeout` | `0.5` | 位置・姿勢成分の最大受信経過秒数 |
+| `start_com3` | `true` | COM3を一緒に起動するか |
+| `can_port` | `can0` | CANインターフェース |
+| `dbc_path` | `/usr/local/share/dbc/excavator_com3.dbc` | DBCの場所 |
+| `robot_name` | `zx200` | COM3を含む車両namespace |
+
+出力系の変更例：`output_plane:=7`。入力が第9系なら`input_plane`は9のままです。
+COM3の出力は `/<robot_name>/global_pose`（`PoseStamped`, `frame_id: world`）。
+測量X（北）/Y（東）から、元コードと同じROS x（東）/y（北）の対応・符号を維持します。
+Zと真東基準の姿勢計算は変更しません。`world -> map`は外部で管理します。
 
 ### OperaSim と連携
 - [OperaSim-AGX](https://github.com/pwri-opera/OperaSim-AGX), [OperaSim-PhysX](https://github.com/pwri-opera/OperaSim-PhysX) の README を参照
