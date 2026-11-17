@@ -88,7 +88,7 @@ OPERA 対応油圧ショベル zx200 の土木研究所公開 ROS2 パッケー�
 
 ### vehicle launchからCOM3と座標変換を起動
 
-`zx200_com3_ros`も `feature/com3-plane-conversion` ブランチを使用してビルドしてください。
+`zx200_com3_ros`も `main` ブランチを使用してビルドしてください。
 追加依存は `libproj-dev` / `proj-data` / `pkg-config` です。
 
 ```bash
