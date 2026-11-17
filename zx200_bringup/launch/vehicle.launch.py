@@ -8,7 +8,8 @@ from launch.actions import (
 )
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
+from launch_ros.substitutions import FindPackageShare
 
 from launch_ros.actions import Node, PushRosNamespace
 from launch_ros.parameter_descriptions import ParameterValue
@@ -37,6 +38,36 @@ def generate_launch_description():
     ld.add_action(DeclareLaunchArgument("command_interface_name", default_value="effort"))
     ld.add_action(declare_robot_name)
     ld.add_action(declare_command_interface_name)
+    ld.add_action(DeclareLaunchArgument(
+        "start_com3", default_value="true",
+        description="Start the COM3 gateway; false when it is already running separately"))
+    ld.add_action(DeclareLaunchArgument(
+        "can_port", default_value="can0", description="COM3 CAN interface"))
+    ld.add_action(DeclareLaunchArgument(
+        "dbc_path", default_value="/usr/local/share/dbc/excavator_com3.dbc"))
+    ld.add_action(DeclareLaunchArgument(
+        "input_plane", default_value="9", description="CAN survey plane number (1-19)"))
+    ld.add_action(DeclareLaunchArgument(
+        "output_plane", default_value="6", description="global_pose plane number (1-19)"))
+    ld.add_action(DeclareLaunchArgument(
+        "pose_timeout", default_value="0.5", description="Maximum pose component age in seconds"))
+
+    # Keep COM3 outside the MoveIt group: its joint_states must not inherit
+    # the front_joint_states remap or a second copy of the robot namespace.
+    ld.add_action(IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(PathJoinSubstitution([
+            FindPackageShare("zx200_com3_ros"), "launch", "zx200_com3_ros.launch.py"
+        ])),
+        condition=IfCondition(LaunchConfiguration("start_com3")),
+        launch_arguments={
+            "ns": LaunchConfiguration("robot_name"),
+            "can_port": LaunchConfiguration("can_port"),
+            "dbc_path": LaunchConfiguration("dbc_path"),
+            "input_plane": LaunchConfiguration("input_plane"),
+            "output_plane": LaunchConfiguration("output_plane"),
+            "pose_timeout": LaunchConfiguration("pose_timeout"),
+        }.items(),
+    ))
     ld.add_action(OpaqueFunction(function=launch_setup))
 
     return ld
